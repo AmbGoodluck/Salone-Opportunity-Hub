@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { Menu, X, Search, Bookmark, User, LogOut, ChevronDown } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -14,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
+import { NotificationBell } from '@/components/layout/notification-bell'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 
 const NAV_LINKS = [
@@ -50,9 +52,13 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-            <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xs">SL</span>
-            </div>
+            <Image
+              src="/logo.png"
+              alt="Salone Opportunity Hub"
+              width={36}
+              height={36}
+              className="rounded-full"
+            />
             <span className="font-bold text-gray-900 hidden sm:block">Salone Opp Hub</span>
           </Link>
 
@@ -87,7 +93,9 @@ export function Navbar() {
             </Link>
 
             {user ? (
-              <DropdownMenu>
+              <>
+                <NotificationBell />
+                <DropdownMenu>
                 <DropdownMenuTrigger>
                   <div className="flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-gray-100 cursor-pointer">
                     <div className="w-7 h-7 bg-emerald-600 rounded-full flex items-center justify-center">
@@ -118,6 +126,7 @@ export function Navbar() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              </>
             ) : (
               <div className="hidden sm:flex items-center gap-2">
                 <Link href="/login">

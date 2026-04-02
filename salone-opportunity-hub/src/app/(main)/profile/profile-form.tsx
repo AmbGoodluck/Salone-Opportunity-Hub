@@ -9,10 +9,21 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Switch } from '@/components/ui/switch'
+import { Separator } from '@/components/ui/separator'
 import { toast } from 'sonner'
-import { LOCATIONS, STUDY_LEVELS, CATEGORIES } from '@/lib/utils'
+import { LOCATIONS, STUDY_LEVELS, CATEGORIES, OPPORTUNITY_TYPES } from '@/lib/utils'
 import type { Profile } from '@/types'
+
+const TYPE_LABELS: Record<string, string> = {
+  job: 'Jobs',
+  internship: 'Internships',
+  scholarship: 'Scholarships',
+  event: 'Events',
+  grant: 'Grants',
+}
 
 const profileSchema = z.object({
   full_name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -30,6 +41,18 @@ interface ProfileFormProps {
 
 export function ProfileForm({ userId, email, initialProfile }: ProfileFormProps) {
   const [isSaving, setIsSaving] = useState(false)
+  const [preferredTypes, setPreferredTypes] = useState<string[]>(
+    (initialProfile?.preferred_types as string[]) ?? []
+  )
+  const [preferredCategories, setPreferredCategories] = useState<string[]>(
+    (initialProfile?.preferred_categories as string[]) ?? []
+  )
+  const [notificationsEnabled, setNotificationsEnabled] = useState(
+    initialProfile?.notifications_enabled ?? true
+  )
+  const [emailNotifications, setEmailNotifications] = useState(
+    initialProfile?.email_notifications ?? true
+  )
 
   const {
     register,
@@ -41,10 +64,22 @@ export function ProfileForm({ userId, email, initialProfile }: ProfileFormProps)
     resolver: zodResolver(profileSchema),
     defaultValues: {
       full_name: initialProfile?.full_name ?? '',
-      location: initialProfile?.location ?? '',
+      location: initialProfile?.location ?? 'Sierra Leone',
       education_level: initialProfile?.education_level ?? '',
     },
   })
+
+  function toggleType(type: string) {
+    setPreferredTypes((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+    )
+  }
+
+  function toggleCategory(cat: string) {
+    setPreferredCategories((prev) =>
+      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
+    )
+  }
 
   async function onSubmit(data: ProfileFormData) {
     setIsSaving(true)
@@ -56,8 +91,12 @@ export function ProfileForm({ userId, email, initialProfile }: ProfileFormProps)
         id: userId,
         email,
         full_name: data.full_name,
-        location: data.location || null,
+        location: data.location || 'Sierra Leone',
         education_level: data.education_level || null,
+        preferred_types: preferredTypes,
+        preferred_categories: preferredCategories,
+        notifications_enabled: notificationsEnabled,
+        email_notifications: emailNotifications,
         updated_at: new Date().toISOString(),
       })
 
@@ -98,11 +137,11 @@ export function ProfileForm({ userId, email, initialProfile }: ProfileFormProps)
           <div className="space-y-2">
             <Label htmlFor="location">Location</Label>
             <Select
-              value={watch('location') ?? ''}
+              value={watch('location') ?? 'Sierra Leone'}
               onValueChange={(val) => setValue('location', val ?? undefined)}
             >
               <SelectTrigger id="location">
-                <SelectValue placeholder="Select your location" />
+                <SelectValue placeholder="Sierra Leone" />
               </SelectTrigger>
               <SelectContent>
                 {LOCATIONS.map((loc) => (
@@ -110,6 +149,7 @@ export function ProfileForm({ userId, email, initialProfile }: ProfileFormProps)
                 ))}
               </SelectContent>
             </Select>
+            <p className="text-xs text-gray-400">This platform is designed for Sierra Leoneans</p>
           </div>
 
           <div className="space-y-2">
@@ -131,12 +171,98 @@ export function ProfileForm({ userId, email, initialProfile }: ProfileFormProps)
         </CardContent>
       </Card>
 
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Interests & Preferences</CardTitle>
+          <CardDescription className="text-xs">
+            Select your interests to get personalized opportunity recommendations
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          <div className="space-y-3">
+            <Label className="text-sm font-semibold">Opportunity types I'm interested in</Label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {OPPORTUNITY_TYPES.map((type) => (
+                <div key={type} className="flex items-center gap-2">
+                  <Checkbox
+                    id={`pref-type-${type}`}
+                    checked={preferredTypes.includes(type)}
+                    onCheckedChange={() => toggleType(type)}
+                  />
+                  <Label htmlFor={`pref-type-${type}`} className="text-sm font-normal cursor-pointer">
+                    {TYPE_LABELS[type]}
+                  </Label>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-gray-400">Leave all unchecked to see everything</p>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-3">
+            <Label className="text-sm font-semibold">Categories I'm interested in</Label>
+            <div className="grid grid-cols-2 gap-2">
+              {CATEGORIES.map((cat) => (
+                <div key={cat} className="flex items-center gap-2">
+                  <Checkbox
+                    id={`pref-cat-${cat}`}
+                    checked={preferredCategories.includes(cat)}
+                    onCheckedChange={() => toggleCategory(cat)}
+                  />
+                  <Label htmlFor={`pref-cat-${cat}`} className="text-sm font-normal cursor-pointer">
+                    {cat}
+                  </Label>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-gray-400">Leave all unchecked to see everything</p>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Notification Preferences</CardTitle>
+          <CardDescription className="text-xs">
+            Get notified when opportunities matching your interests are posted
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <Label className="text-sm">In-app notifications</Label>
+              <p className="text-xs text-gray-400">Show notifications in the bell icon</p>
+            </div>
+            <Switch
+              checked={notificationsEnabled}
+              onCheckedChange={setNotificationsEnabled}
+            />
+          </div>
+
+          <Separator />
+
+          <div className="flex items-center justify-between">
+            <div>
+              <Label className="text-sm">Email notifications</Label>
+              <p className="text-xs text-gray-400">
+                Receive email alerts for matching opportunities
+              </p>
+            </div>
+            <Switch
+              checked={emailNotifications}
+              onCheckedChange={setEmailNotifications}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
       <Button
         type="submit"
         disabled={isSaving}
         className="w-full bg-emerald-600 hover:bg-emerald-700"
       >
-        {isSaving ? 'Saving…' : 'Save Profile'}
+        {isSaving ? 'Saving...' : 'Save Profile'}
       </Button>
     </form>
   )

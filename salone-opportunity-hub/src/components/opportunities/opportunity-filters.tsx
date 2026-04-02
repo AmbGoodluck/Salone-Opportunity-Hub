@@ -16,6 +16,7 @@ const TYPE_LABELS: Record<string, string> = {
   internship: 'Internships',
   scholarship: 'Scholarships',
   event: 'Events',
+  grant: 'Grants',
 }
 
 const DEADLINE_OPTIONS = [

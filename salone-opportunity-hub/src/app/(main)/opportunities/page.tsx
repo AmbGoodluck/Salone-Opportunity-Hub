@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
+import { SlidersHorizontal } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { OpportunityCard } from '@/components/opportunities/opportunity-card'
 import { OpportunityFilters } from '@/components/opportunities/opportunity-filters'
@@ -40,6 +41,7 @@ async function OpportunitiesGrid({ searchParams }: { searchParams: SearchParams 
   let query = supabase
     .from('opportunities')
     .select('*', { count: 'exact' })
+    .eq('sl_eligible', true)
 
   // Search
   if (searchParams.search) {
@@ -55,7 +57,7 @@ async function OpportunitiesGrid({ searchParams }: { searchParams: SearchParams 
     ? [searchParams.type]
     : []
   if (types.length > 0) {
-    query = query.in('type', types as ('job' | 'internship' | 'scholarship' | 'event')[])
+    query = query.in('type', types as ('job' | 'internship' | 'scholarship' | 'event' | 'grant')[])
   }
 
   // Category filter
@@ -97,8 +99,11 @@ async function OpportunitiesGrid({ searchParams }: { searchParams: SearchParams 
     query = query.order('deadline', { ascending: true, nullsFirst: false })
   } else if (sort === 'alphabetical') {
     query = query.order('title', { ascending: true })
-  } else {
+  } else if (sort === 'recommended' && user) {
+    // For recommended, we fetch more and re-sort client-side based on profile preferences
     query = query.order('created_at', { ascending: false })
+  } else {
+    query = query.order('created_at', { ascending: false }).order('type', { ascending: true })
   }
 
   query = query.range(offset, offset + PAGE_SIZE - 1)
@@ -107,12 +112,43 @@ async function OpportunitiesGrid({ searchParams }: { searchParams: SearchParams 
 
   // Get saved opportunity IDs for current user
   let savedIds: Set<string> = new Set()
+  let userProfile: { preferred_types: string[]; preferred_categories: string[] } | null = null
   if (user) {
     const { data: saved } = await supabase
       .from('saved_opportunities')
       .select('opportunity_id')
       .eq('user_id', user.id)
     savedIds = new Set(saved?.map((s) => s.opportunity_id) ?? [])
+
+    if (sort === 'recommended') {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('preferred_types, preferred_categories')
+        .eq('id', user.id)
+        .single()
+      userProfile = profile as { preferred_types: string[]; preferred_categories: string[] } | null
+    }
+  }
+
+  // Re-sort recommended results by profile match score
+  let sortedOpportunities = opportunities ?? []
+  if (sort === 'recommended' && userProfile && sortedOpportunities.length > 0) {
+    const prefTypes = new Set(userProfile.preferred_types ?? [])
+    const prefCats = new Set(userProfile.preferred_categories ?? [])
+
+    sortedOpportunities = [...sortedOpportunities].sort((a, b) => {
+      let scoreA = 0
+      let scoreB = 0
+      if (prefTypes.size > 0) {
+        if (prefTypes.has(a.type)) scoreA += 2
+        if (prefTypes.has(b.type)) scoreB += 2
+      }
+      if (prefCats.size > 0) {
+        if (prefCats.has(a.category)) scoreA += 1
+        if (prefCats.has(b.category)) scoreB += 1
+      }
+      return scoreB - scoreA
+    })
   }
 
   const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE)
@@ -122,7 +158,7 @@ async function OpportunitiesGrid({ searchParams }: { searchParams: SearchParams 
     studyLevels.length +
     (searchParams.deadline ? 1 : 0)
 
-  if (!opportunities || opportunities.length === 0) {
+  if (!sortedOpportunities || sortedOpportunities.length === 0) {
     return (
       <EmptyState
         icon="🔍"
@@ -144,8 +180,8 @@ async function OpportunitiesGrid({ searchParams }: { searchParams: SearchParams 
         <OpportunitySort currentSort={sort} />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-        {(opportunities as Opportunity[]).map((opp) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {(sortedOpportunities as Opportunity[]).map((opp) => (
           <OpportunityCard
             key={opp.id}
             opportunity={opp}
@@ -221,21 +257,30 @@ function PaginationBar({
 
 function CardSkeleton() {
   return (
-    <div className="border rounded-xl p-4 space-y-3">
-      <div className="flex justify-between">
-        <Skeleton className="h-5 w-20" />
-        <Skeleton className="h-5 w-24" />
+    <div className="border rounded-xl p-6 space-y-4">
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-10 w-10 rounded-lg" />
+          <Skeleton className="h-6 w-16" />
+        </div>
+        <Skeleton className="h-6 w-20" />
       </div>
-      <Skeleton className="h-4 w-full" />
-      <Skeleton className="h-4 w-3/4" />
-      <Skeleton className="h-12 w-full" />
-      <div className="flex gap-2">
-        <Skeleton className="h-3 w-20" />
-        <Skeleton className="h-3 w-16" />
+      <div className="space-y-2">
+        <Skeleton className="h-6 w-full" />
+        <Skeleton className="h-6 w-2/3" />
       </div>
-      <div className="flex gap-2">
-        <Skeleton className="h-8 flex-1" />
-        <Skeleton className="h-8 w-8" />
+      <div className="flex items-center gap-2">
+        <Skeleton className="h-4 w-4 rounded" />
+        <Skeleton className="h-4 w-32" />
+      </div>
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-3/4" />
+      </div>
+      <div className="flex gap-2 pt-2">
+        <Skeleton className="h-10 flex-1 rounded-lg" />
+        <Skeleton className="h-10 w-10 rounded-lg" />
       </div>
     </div>
   )
@@ -253,26 +298,73 @@ export default async function OpportunitiesPage({
     (Array.isArray(params.study_level) ? params.study_level.length : params.study_level ? 1 : 0) +
     (params.deadline ? 1 : 0)
 
+  // Fetch opportunity counts for stats
+  const supabase = await createClient()
+  const [{count: totalCount}, {count: jobCount}, {count: internshipCount}, {count: scholarshipCount}, {count: eventCount}, {count: grantCount}] = await Promise.all([
+    supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('sl_eligible', true),
+    supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'job').eq('sl_eligible', true),
+    supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'internship').eq('sl_eligible', true),
+    supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'scholarship').eq('sl_eligible', true),
+    supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'event').eq('sl_eligible', true),
+    supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'grant').eq('sl_eligible', true),
+  ])
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Page header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">Opportunities</h1>
-        <p className="text-gray-500 text-sm">Scholarships, jobs, internships &amp; events for Sierra Leone youth</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Opportunities</h1>
+        <p className="text-gray-600">Scholarships, jobs, internships, grants &amp; events for Sierra Leone youth</p>
       </div>
 
-      {/* Search + filter bar */}
+      {/* Category Stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
+        <div className="bg-white rounded-lg border border-gray-200 p-4 text-center hover:shadow-md transition-shadow">
+          <div className="text-2xl font-bold text-emerald-600">{totalCount ?? 0}</div>
+          <div className="text-xs text-gray-600 mt-1">Total</div>
+        </div>
+        <div className="bg-blue-50 rounded-lg border border-blue-200 p-4 text-center hover:shadow-md transition-shadow">
+          <div className="text-2xl font-bold text-blue-700">{jobCount ?? 0}</div>
+          <div className="text-xs text-blue-700 mt-1">Jobs</div>
+        </div>
+        <div className="bg-purple-50 rounded-lg border border-purple-200 p-4 text-center hover:shadow-md transition-shadow">
+          <div className="text-2xl font-bold text-purple-700">{internshipCount ?? 0}</div>
+          <div className="text-xs text-purple-700 mt-1">Internships</div>
+        </div>
+        <div className="bg-emerald-50 rounded-lg border border-emerald-200 p-4 text-center hover:shadow-md transition-shadow">
+          <div className="text-2xl font-bold text-emerald-700">{scholarshipCount ?? 0}</div>
+          <div className="text-xs text-emerald-700 mt-1">Scholarships</div>
+        </div>
+        <div className="bg-amber-50 rounded-lg border border-amber-200 p-4 text-center hover:shadow-md transition-shadow">
+          <div className="text-2xl font-bold text-amber-700">{eventCount ?? 0}</div>
+          <div className="text-xs text-amber-700 mt-1">Events</div>
+        </div>
+        <div className="bg-rose-50 rounded-lg border border-rose-200 p-4 text-center hover:shadow-md transition-shadow">
+          <div className="text-2xl font-bold text-rose-700">{grantCount ?? 0}</div>
+          <div className="text-xs text-rose-700 mt-1">Grants</div>
+        </div>
+      </div>
+
+      {/* Search + Filter bar */}
       <div className="flex items-center gap-3 mb-6">
         <OpportunitySearch defaultValue={params.search} />
         <OpportunityFilters activeFilterCount={activeFilterCount} />
       </div>
 
+      {/* Main content: 2-column layout */}
       <div className="flex gap-6">
-        <OpportunityFilters activeFilterCount={activeFilterCount} />
+        {/* Left: Opportunities */}
         <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm text-gray-600">
+              Showing opportunities
+            </p>
+            <OpportunitySort currentSort={params.sort ?? 'newest'} />
+          </div>
+
           <Suspense
             fallback={
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {Array.from({ length: 6 }).map((_, i) => <CardSkeleton key={i} />)}
               </div>
             }
@@ -280,6 +372,13 @@ export default async function OpportunitiesPage({
             <OpportunitiesGrid searchParams={params} />
           </Suspense>
         </div>
+
+        {/* Right: Filters Sidebar (Desktop only) */}
+        <aside className="hidden lg:block w-72 flex-shrink-0">
+          <div className="sticky top-20">
+            <OpportunityFilters activeFilterCount={activeFilterCount} />
+          </div>
+        </aside>
       </div>
     </div>
   )

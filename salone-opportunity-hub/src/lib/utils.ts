@@ -30,7 +30,7 @@ export function truncateText(text: string, maxLength: number): string {
   return text.slice(0, maxLength).trim() + '…'
 }
 
-export const OPPORTUNITY_TYPES = ['job', 'internship', 'scholarship', 'event'] as const
+export const OPPORTUNITY_TYPES = ['job', 'internship', 'scholarship', 'event', 'grant'] as const
 
 export const CATEGORIES = [
   'Technology',
@@ -76,6 +76,7 @@ export const TYPE_COLORS: Record<string, string> = {
   internship: 'bg-purple-100 text-purple-700 border-purple-200',
   scholarship: 'bg-emerald-100 text-emerald-700 border-emerald-200',
   event: 'bg-amber-100 text-amber-700 border-amber-200',
+  grant: 'bg-rose-100 text-rose-700 border-rose-200',
 }
 
 export const STATUS_LABELS: Record<string, string> = {

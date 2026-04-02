@@ -11,11 +11,12 @@ export default async function HomePage() {
   const { data: { user } } = await supabase.auth.getUser()
 
   // Get quick stats
-  const [{ count: scholarshipCount }, { count: jobCount }, { count: internshipCount }] =
+  const [{ count: scholarshipCount }, { count: jobCount }, { count: internshipCount }, { count: grantCount }] =
     await Promise.all([
-      supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'scholarship'),
-      supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'job'),
-      supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'internship'),
+      supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'scholarship').eq('sl_eligible', true),
+      supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'job').eq('sl_eligible', true),
+      supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'internship').eq('sl_eligible', true),
+      supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'grant').eq('sl_eligible', true),
     ])
 
   return (
@@ -36,7 +37,7 @@ export default async function HomePage() {
             </h1>
 
             <p className="text-lg sm:text-xl text-emerald-50 max-w-2xl mx-auto mb-8 leading-relaxed">
-              Discover scholarships, jobs, internships, and events — all in one place.
+              Discover scholarships, jobs, internships, grants, and events — all in one place.
               Build your CV and track applications for free.
             </p>
 
@@ -56,11 +57,12 @@ export default async function HomePage() {
             </div>
 
             {/* Quick stats */}
-            <div className="grid grid-cols-3 gap-4 mt-12 max-w-lg mx-auto">
+            <div className="grid grid-cols-4 gap-4 mt-12 max-w-xl mx-auto">
               {[
                 { label: 'Scholarships', count: scholarshipCount ?? 0, emoji: '🎓' },
                 { label: 'Jobs', count: jobCount ?? 0, emoji: '💼' },
                 { label: 'Internships', count: internshipCount ?? 0, emoji: '🚀' },
+                { label: 'Grants', count: grantCount ?? 0, emoji: '💰' },
               ].map((stat) => (
                 <div key={stat.label} className="bg-white/15 backdrop-blur-sm rounded-xl p-3 sm:p-4">
                   <div className="text-2xl sm:text-3xl font-bold">{stat.count}</div>

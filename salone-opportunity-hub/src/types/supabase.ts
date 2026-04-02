@@ -17,6 +17,10 @@ export type Database = {
           location: string | null
           education_level: string | null
           interests: string[] | null
+          notifications_enabled: boolean
+          email_notifications: boolean
+          preferred_types: string[]
+          preferred_categories: string[]
           created_at: string
           updated_at: string
         }
@@ -27,6 +31,10 @@ export type Database = {
           location?: string | null
           education_level?: string | null
           interests?: string[] | null
+          notifications_enabled?: boolean
+          email_notifications?: boolean
+          preferred_types?: string[]
+          preferred_categories?: string[]
           created_at?: string
           updated_at?: string
         }
@@ -37,6 +45,10 @@ export type Database = {
           location?: string | null
           education_level?: string | null
           interests?: string[] | null
+          notifications_enabled?: boolean
+          email_notifications?: boolean
+          preferred_types?: string[]
+          preferred_categories?: string[]
           created_at?: string
           updated_at?: string
         }
@@ -50,7 +62,7 @@ export type Database = {
           description: string
           requirements: string | null
           how_to_apply: string | null
-          type: 'job' | 'internship' | 'scholarship' | 'event'
+          type: 'job' | 'internship' | 'scholarship' | 'event' | 'grant'
           category: string
           location: string | null
           is_remote: boolean
@@ -61,6 +73,7 @@ export type Database = {
           image_url: string | null
           source_url: string | null
           is_verified: boolean
+          sl_eligible: boolean
           created_at: string
           updated_at: string
         }
@@ -71,7 +84,7 @@ export type Database = {
           description: string
           requirements?: string | null
           how_to_apply?: string | null
-          type: 'job' | 'internship' | 'scholarship' | 'event'
+          type: 'job' | 'internship' | 'scholarship' | 'event' | 'grant'
           category: string
           location?: string | null
           is_remote?: boolean
@@ -82,6 +95,7 @@ export type Database = {
           image_url?: string | null
           source_url?: string | null
           is_verified?: boolean
+          sl_eligible?: boolean
           created_at?: string
           updated_at?: string
         }
@@ -92,7 +106,7 @@ export type Database = {
           description?: string
           requirements?: string | null
           how_to_apply?: string | null
-          type?: 'job' | 'internship' | 'scholarship' | 'event'
+          type?: 'job' | 'internship' | 'scholarship' | 'event' | 'grant'
           category?: string
           location?: string | null
           is_remote?: boolean
@@ -103,6 +117,7 @@ export type Database = {
           image_url?: string | null
           source_url?: string | null
           is_verified?: boolean
+          sl_eligible?: boolean
           created_at?: string
           updated_at?: string
         }
@@ -149,6 +164,36 @@ export type Database = {
             referencedColumns: ['id']
           }
         ]
+      }
+      notifications: {
+        Row: {
+          id: string
+          user_id: string
+          opportunity_id: string | null
+          title: string
+          body: string | null
+          is_read: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          opportunity_id?: string | null
+          title: string
+          body?: string | null
+          is_read?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          opportunity_id?: string | null
+          title?: string
+          body?: string | null
+          is_read?: boolean
+          created_at?: string
+        }
+        Relationships: []
       }
       cvs: {
         Row: {

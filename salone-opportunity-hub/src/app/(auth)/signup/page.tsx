@@ -65,6 +65,7 @@ export default function SignupPage() {
         id: authData.user.id,
         email: data.email,
         full_name: data.full_name,
+        location: 'Sierra Leone',
       })
 
       if (profileError && profileError.code !== '23505') {

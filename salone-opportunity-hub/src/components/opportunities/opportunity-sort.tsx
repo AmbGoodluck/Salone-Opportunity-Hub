@@ -5,8 +5,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 const SORT_OPTIONS = [
   { value: 'newest', label: 'Newest first' },
+  { value: 'recommended', label: 'Recommended' },
   { value: 'deadline', label: 'Deadline (soonest)' },
-  { value: 'alphabetical', label: 'A–Z' },
+  { value: 'alphabetical', label: 'A\u2013Z' },
 ]
 
 export function OpportunitySort({ currentSort }: { currentSort: string }) {

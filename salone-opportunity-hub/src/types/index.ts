@@ -4,8 +4,9 @@ export type Profile = Database['public']['Tables']['profiles']['Row']
 export type Opportunity = Database['public']['Tables']['opportunities']['Row']
 export type SavedOpportunity = Database['public']['Tables']['saved_opportunities']['Row']
 export type CV = Database['public']['Tables']['cvs']['Row']
+export type Notification = Database['public']['Tables']['notifications']['Row']
 
-export type OpportunityType = 'job' | 'internship' | 'scholarship' | 'event'
+export type OpportunityType = 'job' | 'internship' | 'scholarship' | 'event' | 'grant'
 export type SavedStatus = 'saved' | 'applied' | 'in_progress' | 'closed'
 
 export interface OpportunityFilters {

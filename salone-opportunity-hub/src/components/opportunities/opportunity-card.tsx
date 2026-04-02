@@ -2,13 +2,12 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { MapPin, DollarSign, Bookmark, BookmarkCheck, ExternalLink } from 'lucide-react'
+import { MapPin, Bookmark, BookmarkCheck, Briefcase, Zap, GraduationCap, Calendar } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { DeadlineBadge } from '@/components/ui/deadline-badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { createClient } from '@/lib/supabase/client'
-import { cn, truncateText, TYPE_COLORS } from '@/lib/utils'
+import { cn, truncateText, TYPE_COLORS, formatDeadline } from '@/lib/utils'
 import type { Opportunity } from '@/types'
 import { toast } from 'sonner'
 
@@ -19,6 +18,33 @@ interface OpportunityCardProps {
   isLoggedIn?: boolean
 }
 
+const TYPE_ICONS: Record<string, typeof Briefcase> = {
+  job: Briefcase,
+  internship: Zap,
+  scholarship: GraduationCap,
+  event: Calendar,
+  grant: Calendar,
+}
+
+const TYPE_DISPLAY_NAMES: Record<string, string> = {
+  job: 'Job',
+  internship: 'Internship',
+  scholarship: 'Scholarship',
+  event: 'Event',
+  grant: 'Grant',
+}
+
+const LOCATION_SCOPE: Record<string, string> = {
+  'Sierra Leone': 'Local',
+  'West Africa': 'Regional',
+  'Africa': 'Africa-wide',
+  'Remote': 'Remote',
+  'Worldwide': 'Global',
+  'United Kingdom': 'Global',
+  'United States': 'Global',
+  'Europe': 'Global',
+}
+
 export function OpportunityCard({
   opportunity,
   isSaved = false,
@@ -27,6 +53,11 @@ export function OpportunityCard({
 }: OpportunityCardProps) {
   const [saved, setSaved] = useState(isSaved)
   const [isToggling, setIsToggling] = useState(false)
+
+  const TypeIcon = TYPE_ICONS[opportunity.type] || Briefcase
+  const displayName = TYPE_DISPLAY_NAMES[opportunity.type]
+  const deadline = formatDeadline(opportunity.deadline)
+  const locationScope = LOCATION_SCOPE[opportunity.location || ''] || 'Global'
 
   async function handleSaveToggle(e: React.MouseEvent) {
     e.preventDefault()
@@ -75,76 +106,85 @@ export function OpportunityCard({
   }
 
   return (
-    <Card className="group hover:shadow-md transition-shadow border-gray-200 h-full flex flex-col">
-      <CardContent className="p-4 flex flex-col gap-3 h-full">
-        {/* Top row: type badge + deadline */}
-        <div className="flex items-start justify-between gap-2">
-          <Badge
-            variant="outline"
-            className={cn('capitalize text-xs font-medium', TYPE_COLORS[opportunity.type])}
-          >
-            {opportunity.type}
-          </Badge>
-          <DeadlineBadge deadline={opportunity.deadline} />
+    <Card className="group hover:shadow-lg transition-all duration-200 border-gray-200 h-full flex flex-col overflow-hidden">
+      <CardContent className="p-6 flex flex-col gap-4 h-full">
+        {/* Header: Type icon/badge + Deadline badge */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <div className={cn(
+              'p-2 rounded-lg w-fit',
+              TYPE_COLORS[opportunity.type]
+            )}>
+              <TypeIcon className="h-5 w-5" />
+            </div>
+            <Badge
+              variant="outline"
+              className="capitalize text-xs font-semibold bg-green-50 text-green-700 border-green-200 hover:bg-green-50"
+            >
+              {displayName}
+            </Badge>
+          </div>
+          <div className="text-right flex flex-col gap-0.5">
+            <div className="text-xs text-gray-500 font-medium flex items-center gap-1 justify-end">
+              <Calendar className="h-3 w-3" />
+              {deadline.label}
+            </div>
+          </div>
         </div>
 
-        {/* Title & org */}
+        {/* Title - larger and more prominent */}
         <div className="flex-1">
           <Link href={`/opportunities/${opportunity.id}`}>
-            <h3 className="font-semibold text-gray-900 text-sm leading-snug line-clamp-2 group-hover:text-emerald-700 transition-colors mb-1">
+            <h3 className="font-bold text-lg leading-tight line-clamp-3 text-gray-900 group-hover:text-emerald-700 transition-colors mb-2">
               {opportunity.title}
             </h3>
           </Link>
-          <p className="text-xs text-gray-500 font-medium">{opportunity.organization}</p>
+          <p className="text-sm text-gray-600 font-medium mb-1">{opportunity.organization}</p>
         </div>
 
-        {/* Description */}
-        <p className="text-xs text-gray-600 line-clamp-3 leading-relaxed">
-          {truncateText(opportunity.description, 180)}
+        {/* Location with scope */}
+        {opportunity.location && (
+          <div className="flex items-center gap-2 text-sm">
+            <MapPin className="h-4 w-4 text-gray-400 flex-shrink-0" />
+            <span className="text-gray-600">{opportunity.is_remote ? 'Remote' : opportunity.location}</span>
+            <Badge variant="secondary" className="text-xs bg-gray-100 text-gray-700 border-0">
+              {locationScope}
+            </Badge>
+          </div>
+        )}
+
+        {/* Description - more prominent */}
+        <p className="text-sm text-gray-600 line-clamp-3 leading-relaxed">
+          {opportunity.description}
         </p>
 
-        {/* Meta info */}
-        <div className="flex flex-wrap gap-3 text-xs text-gray-500">
-          {opportunity.location && (
-            <span className="flex items-center gap-1">
-              <MapPin className="h-3 w-3" />
-              {opportunity.is_remote ? 'Remote' : opportunity.location}
-            </span>
-          )}
-          {opportunity.funding_amount && (
-            <span className="flex items-center gap-1">
-              <DollarSign className="h-3 w-3" />
-              {opportunity.funding_amount}
-            </span>
-          )}
-        </div>
-
-        {/* Action buttons */}
-        <div className="flex gap-2 pt-1">
+        {/* CTA Area */}
+        <div className="flex gap-2 pt-2 mt-auto">
           <Link href={`/opportunities/${opportunity.id}`} className="flex-1">
             <Button
-              variant="outline"
-              size="sm"
-              className="w-full text-xs h-8 border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold h-10 rounded-lg transition-colors"
             >
-              View Details
+              View &amp; Apply
             </Button>
           </Link>
           <Button
             variant="ghost"
             size="sm"
             className={cn(
-              'h-8 w-8 p-0 flex-shrink-0',
-              saved ? 'text-emerald-600 hover:text-emerald-700' : 'text-gray-400 hover:text-gray-600'
+              'h-10 w-10 p-0 flex-shrink-0 rounded-lg',
+              saved
+                ? 'bg-orange-50 text-orange-500 hover:bg-orange-100'
+                : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
             )}
             onClick={handleSaveToggle}
             disabled={isToggling}
             aria-label={saved ? 'Remove bookmark' : 'Save opportunity'}
+            title={saved ? 'Saved' : 'Save'}
           >
             {saved ? (
-              <BookmarkCheck className="h-4 w-4" />
+              <BookmarkCheck className="h-5 w-5" />
             ) : (
-              <Bookmark className="h-4 w-4" />
+              <Bookmark className="h-5 w-5" />
             )}
           </Button>
         </div>
