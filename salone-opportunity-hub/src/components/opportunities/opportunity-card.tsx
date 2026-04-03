@@ -9,6 +9,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { createClient } from '@/lib/supabase/client'
 import { cn, truncateText, TYPE_COLORS, formatDeadline } from '@/lib/utils'
 import type { Opportunity } from '@/types'
+import type { MatchData } from '@/lib/match'
 import { toast } from 'sonner'
 
 interface OpportunityCardProps {
@@ -16,6 +17,7 @@ interface OpportunityCardProps {
   isSaved?: boolean
   onSaveToggle?: (id: string, saved: boolean) => void
   isLoggedIn?: boolean
+  matchData?: MatchData
 }
 
 const TYPE_ICONS: Record<string, typeof Briefcase> = {
@@ -50,6 +52,7 @@ export function OpportunityCard({
   isSaved = false,
   onSaveToggle,
   isLoggedIn = false,
+  matchData,
 }: OpportunityCardProps) {
   const [saved, setSaved] = useState(isSaved)
   const [isToggling, setIsToggling] = useState(false)
@@ -108,7 +111,7 @@ export function OpportunityCard({
   return (
     <Card className="group hover:shadow-lg transition-all duration-200 border-gray-200 h-full flex flex-col overflow-hidden">
       <CardContent className="p-6 flex flex-col gap-4 h-full">
-        {/* Header: Type icon/badge + Deadline badge */}
+        {/* Header: Type icon/badge + Deadline */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-2">
             <div className={cn(
@@ -124,12 +127,46 @@ export function OpportunityCard({
               {displayName}
             </Badge>
           </div>
-          <div className="text-right flex flex-col gap-0.5">
-            <div className="text-xs text-gray-500 font-medium flex items-center gap-1 justify-end">
+          {/* Deadline badge */}
+          {opportunity.deadline ? (
+            <div className={cn(
+              'text-xs font-semibold px-2 py-1 rounded-md flex items-center gap-1',
+              deadline.urgency === 'urgent'
+                ? 'bg-red-50 text-red-600 border border-red-200'
+                : 'bg-amber-50 text-amber-700 border border-amber-200'
+            )}>
               <Calendar className="h-3 w-3" />
               {deadline.label}
             </div>
-          </div>
+          ) : (
+            <div className="text-xs text-gray-400 flex items-center gap-1">
+              <Calendar className="h-3 w-3" />
+              Open
+            </div>
+          )}
+        </div>
+
+        {/* SL Eligible tag + Match Score */}
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className="inline-flex items-center gap-1 text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full px-2 py-0.5">
+            🇸🇱 Sierra Leoneans Can Apply
+          </span>
+          {matchData && (
+            <span className={cn(
+              'inline-flex items-center text-xs font-semibold rounded-full px-2.5 py-0.5 border',
+              matchData.match_score !== null && matchData.match_score >= 75
+                ? 'bg-orange-50 text-orange-700 border-orange-200'
+                : matchData.match_score !== null && matchData.match_score >= 55
+                ? 'bg-blue-50 text-blue-700 border-blue-200'
+                : matchData.match_score !== null && matchData.match_score >= 35
+                ? 'bg-yellow-50 text-yellow-700 border-yellow-200'
+                : matchData.match_score !== null
+                ? 'bg-gray-50 text-gray-600 border-gray-200'
+                : 'bg-gray-50 text-gray-500 border-gray-200'
+            )}>
+              {matchData.display_text}
+            </span>
+          )}
         </div>
 
         {/* Title - larger and more prominent */}

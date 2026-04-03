@@ -24,6 +24,10 @@ export async function POST(request: NextRequest) {
     { name: 'opportunity_desk', fn: () => scraper.scrapeOpportunityDesk() },
     { name: 'adzuna_api', fn: () => scraper.fetchAdzunaJobs() },
     { name: 'rss_devex', fn: () => scraper.scrapeRSSFeed('https://www.devex.com/jobs.rss') },
+    { name: 'rss_idealist', fn: () => scraper.scrapeRSSFeed('https://idealist.org/feed.xml') },
+    { name: 'rss_reliefweb', fn: () => scraper.scrapeRSSFeed('https://reliefweb.int/jobs/rss.xml') },
+    { name: 'rss_reliefweb_training', fn: () => scraper.scrapeRSSFeed('https://reliefweb.int/training/rss.xml') },
+    { name: 'rss_trust_africa', fn: () => scraper.scrapeRSSFeed('https://trustafrica.org/feed/') },
   ]
 
   for (const source of sources) {

@@ -5,9 +5,11 @@ export type Opportunity = Database['public']['Tables']['opportunities']['Row']
 export type SavedOpportunity = Database['public']['Tables']['saved_opportunities']['Row']
 export type CV = Database['public']['Tables']['cvs']['Row']
 export type Notification = Database['public']['Tables']['notifications']['Row']
+export type Organization = Database['public']['Tables']['organizations']['Row']
 
 export type OpportunityType = 'job' | 'internship' | 'scholarship' | 'event' | 'grant'
 export type SavedStatus = 'saved' | 'applied' | 'in_progress' | 'closed'
+export type LocationType = 'remote' | 'onsite' | 'hybrid'
 
 export interface OpportunityFilters {
   search?: string

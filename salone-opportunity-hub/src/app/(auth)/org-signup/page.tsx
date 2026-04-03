@@ -12,8 +12,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
-const signupSchema = z.object({
-  full_name: z.string().min(2, 'Name must be at least 2 characters'),
+const orgSignupSchema = z.object({
+  organization_name: z.string().min(2, 'Organization name must be at least 2 characters'),
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   confirm_password: z.string(),
@@ -22,94 +22,72 @@ const signupSchema = z.object({
   path: ['confirm_password'],
 })
 
-type SignupForm = z.infer<typeof signupSchema>
+type OrgSignupForm = z.infer<typeof orgSignupSchema>
 
-export default function SignupPage() {
+export default function OrgSignupPage() {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignupForm>({
-    resolver: zodResolver(signupSchema),
+  } = useForm<OrgSignupForm>({
+    resolver: zodResolver(orgSignupSchema),
   })
 
-  async function onSubmit(data: SignupForm) {
+  async function onSubmit(data: OrgSignupForm) {
     setIsLoading(true)
     setError(null)
 
     const supabase = createClient()
 
-    const { data: authData, error: signUpError } = await supabase.auth.signUp({
-      email: data.email,
-      password: data.password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=/profile`,
-        data: { full_name: data.full_name },
-      },
+    // 1. Create user + org via server API (bypasses rate limits & email confirmation)
+    const res = await fetch('/api/org/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: data.organization_name,
+        email: data.email,
+        password: data.password,
+      }),
     })
 
-    if (signUpError) {
-      setError(signUpError.message)
+    if (!res.ok) {
+      let message = 'Failed to create organization. Please try again.'
+      try {
+        const body = await res.json()
+        message = body.error || message
+      } catch {
+        // non-JSON response
+      }
+      setError(message)
       setIsLoading(false)
       return
     }
 
-    if (authData.user) {
-      // Create profile record
-      const { error: profileError } = await supabase.from('profiles').insert({
-        id: authData.user.id,
-        email: data.email,
-        full_name: data.full_name,
-        location: 'Sierra Leone',
-      })
+    // 2. Sign in with the credentials (user is now confirmed)
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: data.email,
+      password: data.password,
+    })
 
-      if (profileError && profileError.code !== '23505') {
-        // Ignore duplicate key errors - profile may already exist
-        console.error('Profile creation error:', profileError)
-      }
-
-      if (authData.session) {
-        // Email confirmation disabled - redirect immediately
-        router.push('/profile')
-        router.refresh()
-      } else {
-        // Email confirmation required
-        setSuccess(true)
-      }
+    if (signInError) {
+      setError(signInError.message)
+      setIsLoading(false)
+      return
     }
 
-    setIsLoading(false)
-  }
-
-  if (success) {
-    return (
-      <Card className="w-full max-w-md shadow-lg">
-        <CardContent className="pt-6 text-center space-y-4">
-          <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
-            <span className="text-3xl">📧</span>
-          </div>
-          <h2 className="text-xl font-bold text-gray-900">Check your email</h2>
-          <p className="text-gray-600 text-sm">
-            We&apos;ve sent a confirmation link to your email address. Click the link to activate your account.
-          </p>
-          <Link href="/login">
-            <Button variant="outline" className="w-full">Back to login</Button>
-          </Link>
-        </CardContent>
-      </Card>
-    )
+    router.push('/dashboard')
+    router.refresh()
   }
 
   return (
     <Card className="w-full max-w-md shadow-lg">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold">Create your account</CardTitle>
-        <CardDescription>Free access to scholarships, jobs &amp; more</CardDescription>
+        <CardTitle className="text-2xl font-bold">Register your organization</CardTitle>
+        <CardDescription>Post opportunities and reach Sierra Leone youth</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -120,16 +98,16 @@ export default function SignupPage() {
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="full_name">Full name</Label>
+            <Label htmlFor="organization_name">Organization name</Label>
             <Input
-              id="full_name"
-              placeholder="Aminata Kamara"
-              autoComplete="name"
-              {...register('full_name')}
-              className={errors.full_name ? 'border-red-400' : ''}
+              id="organization_name"
+              placeholder="e.g. Innovate Sierra Leone"
+              autoComplete="organization"
+              {...register('organization_name')}
+              className={errors.organization_name ? 'border-red-400' : ''}
             />
-            {errors.full_name && (
-              <p className="text-red-500 text-xs">{errors.full_name.message}</p>
+            {errors.organization_name && (
+              <p className="text-red-500 text-xs">{errors.organization_name.message}</p>
             )}
           </div>
 
@@ -138,7 +116,7 @@ export default function SignupPage() {
             <Input
               id="email"
               type="email"
-              placeholder="you@example.com"
+              placeholder="org@example.com"
               autoComplete="email"
               {...register('email')}
               className={errors.email ? 'border-red-400' : ''}
@@ -183,20 +161,20 @@ export default function SignupPage() {
             className="w-full bg-emerald-600 hover:bg-emerald-700"
             disabled={isLoading}
           >
-            {isLoading ? 'Creating account…' : 'Create free account'}
+            {isLoading ? 'Creating account…' : 'Register organization'}
           </Button>
-
-          <p className="text-xs text-center text-gray-500">
-            By signing up, you agree to our{' '}
-            <Link href="/terms" className="underline">Terms</Link> and{' '}
-            <Link href="/privacy" className="underline">Privacy Policy</Link>.
-          </p>
         </form>
 
         <p className="mt-4 text-center text-sm text-gray-600">
-          Already have an account?{' '}
-          <Link href="/login" className="text-emerald-600 hover:text-emerald-700 font-medium">
+          Already have an organization account?{' '}
+          <Link href="/org-login" className="text-emerald-600 hover:text-emerald-700 font-medium">
             Sign in
+          </Link>
+        </p>
+        <p className="mt-2 text-center text-sm text-gray-500">
+          Looking for opportunities?{' '}
+          <Link href="/signup" className="text-emerald-600 hover:text-emerald-700 font-medium">
+            Sign up as a user
           </Link>
         </p>
       </CardContent>

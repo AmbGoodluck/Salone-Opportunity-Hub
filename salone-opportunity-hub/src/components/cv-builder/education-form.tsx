@@ -96,7 +96,7 @@ function EducationEntryCard({
             {entry.institution || 'New Education Entry'}
           </p>
           {entry.degree && (
-            <p className="text-xs text-gray-500 truncate">{entry.degree} — {entry.field}</p>
+            <p className="text-xs text-gray-500 truncate">{entry.degree} - {entry.field}</p>
           )}
         </div>
         <div className="flex items-center gap-2 ml-2 flex-shrink-0">

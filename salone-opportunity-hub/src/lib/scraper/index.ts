@@ -83,6 +83,10 @@ export class OpportunityScraper {
       'https://opportunitydesk.org/scholarships',
       'https://opportunitydesk.org/category/scholarships/',
       'https://opportunitydesk.org/category/fellowships-and-scholarships/',
+      'https://opportunitydesk.org/internships',
+      'https://opportunitydesk.org/grants',
+      'https://opportunitydesk.org/category/grants-funding/',
+      'https://opportunitydesk.org/category/internships-placements/',
     ]
 
     for (const url of urls) {
@@ -131,9 +135,21 @@ export class OpportunityScraper {
 
     // Search terms relevant to Sierra Leone youth
     const searches = [
+      // UK searches
       { country: 'gb', what: 'Sierra Leone', what_or: 'africa development NGO' },
       { country: 'gb', what: 'internship africa', what_or: 'scholarship fellowship' },
+      { country: 'gb', what: 'grant funding africa', what_or: 'internship program' },
+      { country: 'gb', what: 'graduate program africa', what_or: 'funding opportunity' },
+      { country: 'gb', what: 'international development', what_or: 'fellowship africa' },
+      // US searches
+      { country: 'us', what: 'africa internship', what_or: 'fellowship program' },
+      { country: 'us', what: 'international NGO', what_or: 'west africa development' },
+      { country: 'us', what: 'grant program africa', what_or: 'youth scholarship' },
+      { country: 'us', what: 'foreign affairs', what_or: 'international development africa' },
+      { country: 'us', what: 'nonprofit africa', what_or: 'humanitarian internship' },
+      // South Africa / Africa searches
       { country: 'za', what: 'west africa', what_or: 'NGO development' },
+      { country: 'za', what: 'internship youth', what_or: 'grant fellowship' },
     ]
 
     for (const search of searches) {
@@ -225,6 +241,8 @@ export class OpportunityScraper {
       { name: 'opportunity_desk', fn: () => this.scrapeOpportunityDesk() },
       { name: 'adzuna_api', fn: () => this.fetchAdzunaJobs() },
       { name: 'rss_devex', fn: () => this.scrapeRSSFeed('https://www.devex.com/jobs.rss') },
+      { name: 'rss_idealist', fn: () => this.scrapeRSSFeed('https://idealist.org/feed.xml') },
+      { name: 'rss_fundly', fn: () => this.scrapeRSSFeed('https://www.fundly.com/feed.xml') },
     ]
 
     for (const source of sources) {

@@ -45,7 +45,7 @@ export function NotificationBell() {
       setNotifications(data.notifications ?? [])
       setUnreadCount(data.unreadCount ?? 0)
     } catch {
-      // Silently fail — user may not be authenticated
+      // Silently fail - user may not be authenticated
     }
   }
 

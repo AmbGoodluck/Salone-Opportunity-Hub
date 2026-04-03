@@ -25,10 +25,22 @@ const TYPE_LABELS: Record<string, string> = {
   grant: 'Grants',
 }
 
+const EXPERIENCE_LEVELS = ['entry', 'junior', 'mid', 'senior', 'expert'] as const
+
+const EXPERIENCE_LABELS: Record<string, string> = {
+  entry: 'Entry Level (0-1 years)',
+  junior: 'Junior (1-3 years)',
+  mid: 'Mid-Level (3-5 years)',
+  senior: 'Senior (5-10 years)',
+  expert: 'Expert (10+ years)',
+}
+
 const profileSchema = z.object({
   full_name: z.string().min(2, 'Name must be at least 2 characters'),
   location: z.string().optional(),
   education_level: z.string().optional(),
+  experience_level: z.string().optional(),
+  preferred_opportunity_location: z.string().optional(),
 })
 
 type ProfileFormData = z.infer<typeof profileSchema>
@@ -47,6 +59,10 @@ export function ProfileForm({ userId, email, initialProfile }: ProfileFormProps)
   const [preferredCategories, setPreferredCategories] = useState<string[]>(
     (initialProfile?.preferred_categories as string[]) ?? []
   )
+  const [skills, setSkills] = useState<string[]>(
+    (initialProfile?.skills as string[]) ?? []
+  )
+  const [skillInput, setSkillInput] = useState('')
   const [notificationsEnabled, setNotificationsEnabled] = useState(
     initialProfile?.notifications_enabled ?? true
   )
@@ -66,6 +82,8 @@ export function ProfileForm({ userId, email, initialProfile }: ProfileFormProps)
       full_name: initialProfile?.full_name ?? '',
       location: initialProfile?.location ?? 'Sierra Leone',
       education_level: initialProfile?.education_level ?? '',
+      experience_level: initialProfile?.experience_level ?? '',
+      preferred_opportunity_location: initialProfile?.preferred_opportunity_location ?? 'Remote',
     },
   })
 
@@ -95,6 +113,8 @@ export function ProfileForm({ userId, email, initialProfile }: ProfileFormProps)
         education_level: data.education_level || null,
         preferred_types: preferredTypes,
         preferred_categories: preferredCategories,
+        skills: skills.length > 0 ? skills : null,
+        preferred_opportunity_location: data.preferred_opportunity_location || 'Remote',
         notifications_enabled: notificationsEnabled,
         email_notifications: emailNotifications,
         updated_at: new Date().toISOString(),
@@ -102,6 +122,22 @@ export function ProfileForm({ userId, email, initialProfile }: ProfileFormProps)
 
     if (error) {
       toast.error('Failed to save profile: ' + error.message)
+      setIsSaving(false)
+      return
+    }
+
+    // Save experience_level separately (PostgREST schema cache may lag)
+    if (data.experience_level) {
+      const { error: expError } = await supabase
+        .from('profiles')
+        .update({ experience_level: data.experience_level })
+        .eq('id', userId)
+
+      if (expError) {
+        toast.success('Profile saved! Experience level will sync after project restart.')
+      } else {
+        toast.success('Profile saved!')
+      }
     } else {
       toast.success('Profile saved!')
     }
@@ -168,6 +204,43 @@ export function ProfileForm({ userId, email, initialProfile }: ProfileFormProps)
               </SelectContent>
             </Select>
           </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="experience_level">Experience level</Label>
+            <Select
+              value={watch('experience_level') ?? ''}
+              onValueChange={(val) => setValue('experience_level', val ?? undefined)}
+            >
+              <SelectTrigger id="experience_level">
+                <SelectValue placeholder="Select your experience level" />
+              </SelectTrigger>
+              <SelectContent>
+                {EXPERIENCE_LEVELS.map((level) => (
+                  <SelectItem key={level} value={level}>{EXPERIENCE_LABELS[level]}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-2">
+            <Label htmlFor="preferred_opp_location">Preferred opportunity location</Label>
+            <Select
+              value={watch('preferred_opportunity_location') ?? 'Remote'}
+              onValueChange={(val) => setValue('preferred_opportunity_location', val ?? undefined)}
+            >
+              <SelectTrigger id="preferred_opp_location">
+                <SelectValue placeholder="Remote" />
+              </SelectTrigger>
+              <SelectContent>
+                {['Remote', 'Local (Sierra Leone)', 'Regional (West Africa)', 'International'].map((loc) => (
+                  <SelectItem key={loc} value={loc}>{loc}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-gray-400">Where would you prefer to work or study?</p>
+          </div>
         </CardContent>
       </Card>
 
@@ -218,6 +291,72 @@ export function ProfileForm({ userId, email, initialProfile }: ProfileFormProps)
             </div>
             <p className="text-xs text-gray-400">Leave all unchecked to see everything</p>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Skills</CardTitle>
+          <CardDescription className="text-xs">
+            Add your professional and technical skills to improve opportunity matching
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label className="text-sm">Add a skill</Label>
+            <div className="flex gap-2">
+              <Input
+                placeholder="e.g., Python, Data Analysis, Project Management..."
+                value={skillInput}
+                onChange={(e) => setSkillInput(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    if (skillInput.trim() && !skills.includes(skillInput.trim())) {
+                      setSkills([...skills, skillInput.trim()])
+                      setSkillInput('')
+                    }
+                  }
+                }}
+                className="flex-1"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  if (skillInput.trim() && !skills.includes(skillInput.trim())) {
+                    setSkills([...skills, skillInput.trim()])
+                    setSkillInput('')
+                  }
+                }}
+              >
+                Add
+              </Button>
+            </div>
+          </div>
+
+          {skills.length > 0 && (
+            <div className="space-y-2">
+              <Label className="text-sm">Your skills ({skills.length})</Label>
+              <div className="flex flex-wrap gap-2">
+                {skills.map((skill) => (
+                  <div
+                    key={skill}
+                    className="flex items-center gap-2 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-sm border border-emerald-200"
+                  >
+                    <span>{skill}</span>
+                    <button
+                      type="button"
+                      onClick={() => setSkills(skills.filter((s) => s !== skill))}
+                      className="text-emerald-600 hover:text-emerald-800 font-bold"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 

@@ -21,6 +21,9 @@ export type Database = {
           email_notifications: boolean
           preferred_types: string[]
           preferred_categories: string[]
+          skills: string[] | null
+          experience_level: string | null
+          preferred_opportunity_location: string | null
           created_at: string
           updated_at: string
         }
@@ -35,6 +38,9 @@ export type Database = {
           email_notifications?: boolean
           preferred_types?: string[]
           preferred_categories?: string[]
+          skills?: string[] | null
+          experience_level?: string | null
+          preferred_opportunity_location?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -49,6 +55,33 @@ export type Database = {
           email_notifications?: boolean
           preferred_types?: string[]
           preferred_categories?: string[]
+          skills?: string[] | null
+          experience_level?: string | null
+          preferred_opportunity_location?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      organizations: {
+        Row: {
+          id: string
+          name: string
+          email: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          name: string
+          email: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          email?: string
           created_at?: string
           updated_at?: string
         }
@@ -58,13 +91,16 @@ export type Database = {
         Row: {
           id: string
           title: string
+          slug: string | null
           organization: string
+          organization_id: string | null
           description: string
           requirements: string | null
           how_to_apply: string | null
           type: 'job' | 'internship' | 'scholarship' | 'event' | 'grant'
           category: string
           location: string | null
+          location_type: 'remote' | 'onsite' | 'hybrid'
           is_remote: boolean
           deadline: string | null
           funding_amount: string | null
@@ -74,19 +110,25 @@ export type Database = {
           source_url: string | null
           is_verified: boolean
           sl_eligible: boolean
+          required_skills: Json
+          education_level: string | null
+          experience_level: string | null
           created_at: string
           updated_at: string
         }
         Insert: {
           id?: string
           title: string
+          slug?: string | null
           organization: string
+          organization_id?: string | null
           description: string
           requirements?: string | null
           how_to_apply?: string | null
           type: 'job' | 'internship' | 'scholarship' | 'event' | 'grant'
           category: string
           location?: string | null
+          location_type?: 'remote' | 'onsite' | 'hybrid'
           is_remote?: boolean
           deadline?: string | null
           funding_amount?: string | null
@@ -96,19 +138,25 @@ export type Database = {
           source_url?: string | null
           is_verified?: boolean
           sl_eligible?: boolean
+          required_skills?: Json
+          education_level?: string | null
+          experience_level?: string | null
           created_at?: string
           updated_at?: string
         }
         Update: {
           id?: string
           title?: string
+          slug?: string | null
           organization?: string
+          organization_id?: string | null
           description?: string
           requirements?: string | null
           how_to_apply?: string | null
           type?: 'job' | 'internship' | 'scholarship' | 'event' | 'grant'
           category?: string
           location?: string | null
+          location_type?: 'remote' | 'onsite' | 'hybrid'
           is_remote?: boolean
           deadline?: string | null
           funding_amount?: string | null
@@ -118,10 +166,21 @@ export type Database = {
           source_url?: string | null
           is_verified?: boolean
           sl_eligible?: boolean
+          required_skills?: Json
+          education_level?: string | null
+          experience_level?: string | null
           created_at?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: 'opportunities_organization_id_fkey'
+            columns: ['organization_id']
+            isOneToOne: false
+            referencedRelation: 'organizations'
+            referencedColumns: ['id']
+          }
+        ]
       }
       saved_opportunities: {
         Row: {

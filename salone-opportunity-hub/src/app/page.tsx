@@ -37,7 +37,7 @@ export default async function HomePage() {
             </h1>
 
             <p className="text-lg sm:text-xl text-emerald-50 max-w-2xl mx-auto mb-8 leading-relaxed">
-              Discover scholarships, jobs, internships, grants, and events — all in one place.
+              Discover scholarships, jobs, internships, grants, and events - all in one place.
               Build your CV and track applications for free.
             </p>
 
@@ -104,7 +104,7 @@ export default async function HomePage() {
               {
                 emoji: '📱',
                 title: 'Mobile Friendly',
-                desc: 'Optimized for low-bandwidth mobile use — fast, lightweight, and accessible.',
+                desc: 'Optimized for low-bandwidth mobile use - fast, lightweight, and accessible.',
                 href: '/opportunities',
               },
             ].map((feature) => (
@@ -129,7 +129,7 @@ export default async function HomePage() {
               </p>
               <Link href="/signup">
                 <Button size="lg" className="bg-emerald-600 hover:bg-emerald-500 px-8">
-                  Get Started — It&apos;s Free
+                  Get Started - It&apos;s Free
                 </Button>
               </Link>
             </div>

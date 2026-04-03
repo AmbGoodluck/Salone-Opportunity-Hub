@@ -24,7 +24,7 @@ export async function matchAndNotify(opportunities: InsertedOpportunity[]) {
   // Get all profiles with notifications enabled
   const { data: profiles } = await supabase
     .from('profiles')
-    .select('id, email, full_name, preferred_types, preferred_categories, notifications_enabled, email_notifications')
+    .select('id, email, full_name, preferred_types, preferred_categories, skills, preferred_opportunity_location, notifications_enabled, email_notifications')
     .eq('notifications_enabled', true)
 
   if (!profiles || profiles.length === 0) return

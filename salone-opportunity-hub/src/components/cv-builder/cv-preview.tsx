@@ -39,10 +39,10 @@ function ProfessionalTemplate({ data }: { data: CVData }) {
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-semibold text-gray-900">{e.institution}</p>
-                  <p className="text-xs text-gray-600">{e.degree}{e.field && ` — ${e.field}`}</p>
+                  <p className="text-xs text-gray-600">{e.degree}{e.field && ` - ${e.field}`}</p>
                 </div>
                 <p className="text-xs text-gray-400 flex-shrink-0 ml-2">
-                  {formatMonth(e.start_date)}{e.is_current ? ' — Present' : e.end_date ? ` — ${formatMonth(e.end_date)}` : ''}
+                  {formatMonth(e.start_date)}{e.is_current ? ' - Present' : e.end_date ? ` - ${formatMonth(e.end_date)}` : ''}
                 </p>
               </div>
               {e.description && <p className="text-xs text-gray-500 mt-1">{e.description}</p>}
@@ -62,7 +62,7 @@ function ProfessionalTemplate({ data }: { data: CVData }) {
                   <p className="text-xs text-gray-600">{e.company}{e.location && `, ${e.location}`}</p>
                 </div>
                 <p className="text-xs text-gray-400 flex-shrink-0 ml-2">
-                  {formatMonth(e.start_date)}{e.is_current ? ' — Present' : e.end_date ? ` — ${formatMonth(e.end_date)}` : ''}
+                  {formatMonth(e.start_date)}{e.is_current ? ' - Present' : e.end_date ? ` - ${formatMonth(e.end_date)}` : ''}
                 </p>
               </div>
               {e.description && (
@@ -91,7 +91,7 @@ function ProfessionalTemplate({ data }: { data: CVData }) {
             {languages.map((l) => (
               <div key={l.id} className="text-xs">
                 <span className="font-medium">{l.language}</span>
-                <span className="text-gray-400"> — {l.proficiency}</span>
+                <span className="text-gray-400"> - {l.proficiency}</span>
               </div>
             ))}
           </div>
@@ -104,7 +104,7 @@ function ProfessionalTemplate({ data }: { data: CVData }) {
           {certifications.map((c) => (
             <div key={c.id} className="mb-2">
               <p className="font-semibold text-xs">{c.name}</p>
-              <p className="text-xs text-gray-500">{c.issuer}{c.date && ` — ${formatMonth(c.date)}`}</p>
+              <p className="text-xs text-gray-500">{c.issuer}{c.date && ` - ${formatMonth(c.date)}`}</p>
             </div>
           ))}
         </Section>
@@ -145,7 +145,7 @@ function ModernTemplate({ data }: { data: CVData }) {
             <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Languages</h3>
             {languages.map((l) => (
               <div key={l.id} className="text-xs text-gray-300 mb-1">
-                {l.language} <span className="text-gray-500">— {l.proficiency}</span>
+                {l.language} <span className="text-gray-500">- {l.proficiency}</span>
               </div>
             ))}
           </div>
@@ -171,7 +171,7 @@ function ModernTemplate({ data }: { data: CVData }) {
                 <p className="text-xs text-emerald-600">{e.company}</p>
                 <p className="text-xs text-gray-400">
                   {formatMonth(e.start_date)}
-                  {e.is_current ? ' — Present' : e.end_date ? ` — ${formatMonth(e.end_date)}` : ''}
+                  {e.is_current ? ' - Present' : e.end_date ? ` - ${formatMonth(e.end_date)}` : ''}
                 </p>
                 {e.description && <p className="text-xs text-gray-600 mt-1">{e.description}</p>}
               </div>
@@ -187,7 +187,7 @@ function ModernTemplate({ data }: { data: CVData }) {
             {education.map((e) => (
               <div key={e.id} className="mb-2">
                 <p className="font-semibold">{e.institution}</p>
-                <p className="text-xs text-gray-600">{e.degree}{e.field && ` — ${e.field}`}</p>
+                <p className="text-xs text-gray-600">{e.degree}{e.field && ` - ${e.field}`}</p>
               </div>
             ))}
           </div>
@@ -225,7 +225,7 @@ function CreativeTemplate({ data }: { data: CVData }) {
                   <p className="font-semibold text-gray-900">{e.title}</p>
                   <p className="text-xs text-emerald-600 font-medium">{e.company}</p>
                   <p className="text-xs text-gray-400">
-                    {formatMonth(e.start_date)} — {e.is_current ? 'Present' : formatMonth(e.end_date)}
+                    {formatMonth(e.start_date)} - {e.is_current ? 'Present' : formatMonth(e.end_date)}
                   </p>
                   {e.description && <p className="text-xs text-gray-600 mt-1">{e.description}</p>}
                 </div>
@@ -239,7 +239,7 @@ function CreativeTemplate({ data }: { data: CVData }) {
               {education.map((e) => (
                 <div key={e.id} className="mb-3 pl-3 border-l-2 border-emerald-200">
                   <p className="font-semibold">{e.institution}</p>
-                  <p className="text-xs text-gray-600">{e.degree} — {e.field}</p>
+                  <p className="text-xs text-gray-600">{e.degree} - {e.field}</p>
                 </div>
               ))}
             </div>
@@ -265,7 +265,7 @@ function CreativeTemplate({ data }: { data: CVData }) {
               <h3 className="text-sm font-bold text-emerald-700 mb-2">Languages</h3>
               {languages.map((l) => (
                 <div key={l.id} className="text-xs text-gray-700 mb-1">
-                  <span className="font-medium">{l.language}</span> — {l.proficiency}
+                  <span className="font-medium">{l.language}</span> - {l.proficiency}
                 </div>
               ))}
             </div>

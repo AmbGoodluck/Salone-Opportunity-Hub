@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 const SORT_OPTIONS = [
   { value: 'newest', label: 'Newest first' },
+  { value: 'best_match', label: 'Best Match' },
   { value: 'recommended', label: 'Recommended' },
   { value: 'deadline', label: 'Deadline (soonest)' },
   { value: 'alphabetical', label: 'A\u2013Z' },

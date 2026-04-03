@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
-import { Menu, X, Search, Bookmark, User, LogOut, ChevronDown } from 'lucide-react'
+import { Menu, X, Search, Bookmark, User, LogOut, ChevronDown, Building2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import {
@@ -119,6 +119,10 @@ export function Navbar() {
                     <Bookmark className="mr-2 h-4 w-4" />
                     Saved Opportunities
                   </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/dashboard')}>
+                    <Building2 className="mr-2 h-4 w-4" />
+                    Org Dashboard
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut} className="text-red-600 cursor-pointer">
                     <LogOut className="mr-2 h-4 w-4" />
@@ -134,6 +138,9 @@ export function Navbar() {
                 </Link>
                 <Link href="/signup">
                   <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700">Sign up</Button>
+                </Link>
+                <Link href="/org-login">
+                  <Button variant="ghost" size="sm">Organizations</Button>
                 </Link>
               </div>
             )}

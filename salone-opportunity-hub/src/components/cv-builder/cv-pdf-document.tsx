@@ -124,10 +124,10 @@ export function CVPdfDocument({ data }: { data: CVData }) {
                   <Text style={styles.entryTitle}>{e.institution}</Text>
                   <Text style={styles.entryDate}>
                     {formatMonth(e.start_date)}
-                    {e.is_current ? ' — Present' : e.end_date ? ` — ${formatMonth(e.end_date)}` : ''}
+                    {e.is_current ? ' - Present' : e.end_date ? ` - ${formatMonth(e.end_date)}` : ''}
                   </Text>
                 </View>
-                <Text style={styles.entrySubtitle}>{e.degree}{e.field && ` — ${e.field}`}</Text>
+                <Text style={styles.entrySubtitle}>{e.degree}{e.field && ` - ${e.field}`}</Text>
                 {e.description && <Text style={styles.entryDesc}>{e.description}</Text>}
               </View>
             ))}
@@ -144,7 +144,7 @@ export function CVPdfDocument({ data }: { data: CVData }) {
                   <Text style={styles.entryTitle}>{e.title}</Text>
                   <Text style={styles.entryDate}>
                     {formatMonth(e.start_date)}
-                    {e.is_current ? ' — Present' : e.end_date ? ` — ${formatMonth(e.end_date)}` : ''}
+                    {e.is_current ? ' - Present' : e.end_date ? ` - ${formatMonth(e.end_date)}` : ''}
                   </Text>
                 </View>
                 <Text style={styles.entrySubtitle}>{e.company}{e.location && `, ${e.location}`}</Text>
@@ -185,7 +185,7 @@ export function CVPdfDocument({ data }: { data: CVData }) {
             {certifications.map((c) => (
               <View key={c.id} style={styles.entryBlock}>
                 <Text style={styles.entryTitle}>{c.name}</Text>
-                <Text style={styles.entrySubtitle}>{c.issuer}{c.date && ` — ${formatMonth(c.date)}`}</Text>
+                <Text style={styles.entrySubtitle}>{c.issuer}{c.date && ` - ${formatMonth(c.date)}`}</Text>
               </View>
             ))}
           </View>

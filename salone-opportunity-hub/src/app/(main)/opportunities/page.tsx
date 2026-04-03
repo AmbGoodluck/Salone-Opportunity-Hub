@@ -6,9 +6,13 @@ import { OpportunityCard } from '@/components/opportunities/opportunity-card'
 import { OpportunityFilters } from '@/components/opportunities/opportunity-filters'
 import { OpportunitySearch } from '@/components/opportunities/opportunity-search'
 import { OpportunitySort } from '@/components/opportunities/opportunity-sort'
+import { LocalFilter } from '@/components/opportunities/local-filter'
+import { Pagination } from '@/components/opportunities/pagination'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
 import type { Opportunity } from '@/types'
+import type { Profile } from '@/types'
+import { getMatchData, calculateMatch, isProfileComplete } from '@/lib/match'
 import { addDays, addMonths } from 'date-fns'
 
 export const metadata: Metadata = {
@@ -26,6 +30,7 @@ interface SearchParams {
   study_level?: string | string[]
   sort?: string
   page?: string
+  local?: string
 }
 
 async function OpportunitiesGrid({ searchParams }: { searchParams: SearchParams }) {
@@ -93,14 +98,21 @@ async function OpportunitiesGrid({ searchParams }: { searchParams: SearchParams 
       .lte('deadline', cutoff.toISOString())
   }
 
+  // Local Sierra Leone filter - match org-posted opportunities with SL location
+  if (searchParams.local === '1') {
+    query = query.or(
+      'location.ilike.%sierra leone%,location.ilike.%freetown%,location.ilike.%bo %,location.ilike.%kenema%,location.ilike.%makeni%'
+    )
+  }
+
   // Sort
   const sort = searchParams.sort ?? 'newest'
   if (sort === 'deadline') {
     query = query.order('deadline', { ascending: true, nullsFirst: false })
   } else if (sort === 'alphabetical') {
     query = query.order('title', { ascending: true })
-  } else if (sort === 'recommended' && user) {
-    // For recommended, we fetch more and re-sort client-side based on profile preferences
+  } else if ((sort === 'recommended' || sort === 'best_match') && user) {
+    // For recommended/best_match, fetch more and re-sort server-side
     query = query.order('created_at', { ascending: false })
   } else {
     query = query.order('created_at', { ascending: false }).order('type', { ascending: true })
@@ -110,29 +122,35 @@ async function OpportunitiesGrid({ searchParams }: { searchParams: SearchParams 
 
   const { data: opportunities, count } = await query
 
-  // Get saved opportunity IDs for current user
+  // Get saved opportunity IDs and full profile for match scoring
   let savedIds: Set<string> = new Set()
-  let userProfile: { preferred_types: string[]; preferred_categories: string[] } | null = null
+  let userProfile: Profile | null = null
   if (user) {
-    const { data: saved } = await supabase
-      .from('saved_opportunities')
-      .select('opportunity_id')
-      .eq('user_id', user.id)
-    savedIds = new Set(saved?.map((s) => s.opportunity_id) ?? [])
-
-    if (sort === 'recommended') {
-      const { data: profile } = await supabase
+    const [{ data: saved }, { data: profile }] = await Promise.all([
+      supabase
+        .from('saved_opportunities')
+        .select('opportunity_id')
+        .eq('user_id', user.id),
+      supabase
         .from('profiles')
-        .select('preferred_types, preferred_categories')
+        .select('*')
         .eq('id', user.id)
-        .single()
-      userProfile = profile as { preferred_types: string[]; preferred_categories: string[] } | null
-    }
+        .single(),
+    ])
+    savedIds = new Set(saved?.map((s) => s.opportunity_id) ?? [])
+    userProfile = profile as Profile | null
   }
 
   // Re-sort recommended results by profile match score
   let sortedOpportunities = opportunities ?? []
-  if (sort === 'recommended' && userProfile && sortedOpportunities.length > 0) {
+  if (sort === 'best_match' && userProfile && isProfileComplete(userProfile) && sortedOpportunities.length > 0) {
+    // Sort by full match score (skills, education, experience, location)
+    sortedOpportunities = [...sortedOpportunities].sort((a, b) => {
+      const scoreA = calculateMatch(userProfile!, a as Opportunity).match_score
+      const scoreB = calculateMatch(userProfile!, b as Opportunity).match_score
+      return scoreB - scoreA // descending: best match first
+    })
+  } else if (sort === 'recommended' && userProfile && sortedOpportunities.length > 0) {
     const prefTypes = new Set(userProfile.preferred_types ?? [])
     const prefCats = new Set(userProfile.preferred_categories ?? [])
 
@@ -172,12 +190,17 @@ async function OpportunitiesGrid({ searchParams }: { searchParams: SearchParams 
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-500">
-          {count} result{count !== 1 ? 's' : ''}
-          {page > 1 && ` — Page ${page} of ${totalPages}`}
+      <p className="text-sm text-gray-500">
+        {count} result{count !== 1 ? 's' : ''}
+        {page > 1 && ` - Page ${page} of ${totalPages}`}
+      </p>
+
+      <div className="bg-amber-50 border border-amber-300 rounded-lg px-4 py-3 text-sm">
+        <p className="font-semibold text-amber-800">⚠️ Fraud Alert</p>
+        <p className="text-amber-700 mt-1">
+          Do NOT send money to anyone claiming to offer opportunities. All legitimate opportunities listed here are free to apply. If someone asks you for payment, report it immediately.
         </p>
-        <OpportunitySort currentSort={sort} />
+        <p className="text-amber-600 mt-1 text-xs italic">- Sheku Foryoh, CEO</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -187,69 +210,14 @@ async function OpportunitiesGrid({ searchParams }: { searchParams: SearchParams 
             opportunity={opp}
             isSaved={savedIds.has(opp.id)}
             isLoggedIn={!!user}
+            matchData={getMatchData(!!user, userProfile, opp)}
           />
         ))}
       </div>
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <PaginationBar currentPage={page} totalPages={totalPages} searchParams={searchParams} />
-      )}
-    </div>
-  )
-}
-
-function PaginationBar({
-  currentPage,
-  totalPages,
-  searchParams,
-}: {
-  currentPage: number
-  totalPages: number
-  searchParams: SearchParams
-}) {
-  const buildUrl = (page: number) => {
-    const params = new URLSearchParams()
-    Object.entries(searchParams).forEach(([key, val]) => {
-      if (key === 'page') return
-      if (Array.isArray(val)) val.forEach((v) => params.append(key, v))
-      else if (val) params.set(key, val)
-    })
-    params.set('page', String(page))
-    return `/opportunities?${params.toString()}`
-  }
-
-  const pages = Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
-    if (totalPages <= 7) return i + 1
-    if (currentPage <= 4) return i + 1
-    if (currentPage >= totalPages - 3) return totalPages - 6 + i
-    return currentPage - 3 + i
-  })
-
-  return (
-    <div className="flex items-center justify-center gap-2 pt-4">
-      {currentPage > 1 && (
-        <a href={buildUrl(currentPage - 1)} className="px-3 py-1.5 text-sm border rounded-lg hover:bg-gray-50">
-          Previous
-        </a>
-      )}
-      {pages.map((p) => (
-        <a
-          key={p}
-          href={buildUrl(p)}
-          className={`px-3 py-1.5 text-sm border rounded-lg ${
-            p === currentPage
-              ? 'bg-emerald-600 text-white border-emerald-600'
-              : 'hover:bg-gray-50'
-          }`}
-        >
-          {p}
-        </a>
-      ))}
-      {currentPage < totalPages && (
-        <a href={buildUrl(currentPage + 1)} className="px-3 py-1.5 text-sm border rounded-lg hover:bg-gray-50">
-          Next
-        </a>
+        <Pagination currentPage={page} totalPages={totalPages} />
       )}
     </div>
   )
@@ -345,41 +313,25 @@ export default async function OpportunitiesPage({
         </div>
       </div>
 
-      {/* Search + Filter bar */}
+      {/* Search + Filter + Sort bar */}
       <div className="flex items-center gap-3 mb-6">
         <OpportunitySearch defaultValue={params.search} />
         <OpportunityFilters activeFilterCount={activeFilterCount} />
+        <LocalFilter />
+        <OpportunitySort currentSort={params.sort ?? 'newest'} />
       </div>
 
-      {/* Main content: 2-column layout */}
-      <div className="flex gap-6">
-        {/* Left: Opportunities */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-sm text-gray-600">
-              Showing opportunities
-            </p>
-            <OpportunitySort currentSort={params.sort ?? 'newest'} />
+      {/* Opportunities grid */}
+      <Suspense
+        key={JSON.stringify(params)}
+        fallback={
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {Array.from({ length: 6 }).map((_, i) => <CardSkeleton key={i} />)}
           </div>
-
-          <Suspense
-            fallback={
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {Array.from({ length: 6 }).map((_, i) => <CardSkeleton key={i} />)}
-              </div>
-            }
-          >
-            <OpportunitiesGrid searchParams={params} />
-          </Suspense>
-        </div>
-
-        {/* Right: Filters Sidebar (Desktop only) */}
-        <aside className="hidden lg:block w-72 flex-shrink-0">
-          <div className="sticky top-20">
-            <OpportunityFilters activeFilterCount={activeFilterCount} />
-          </div>
-        </aside>
-      </div>
+        }
+      >
+        <OpportunitiesGrid searchParams={params} />
+      </Suspense>
     </div>
   )
 }

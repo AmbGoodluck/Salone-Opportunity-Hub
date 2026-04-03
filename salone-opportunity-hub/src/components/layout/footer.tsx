@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 export function Footer() {
   return (
@@ -8,9 +9,13 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-1 sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">SL</span>
-              </div>
+              <Image
+                src="/logo.png"
+                alt="Salone Opportunity Hub"
+                width={36}
+                height={36}
+                className="rounded-full"
+              />
               <span className="font-bold text-white">Salone Opportunity Hub</span>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed">

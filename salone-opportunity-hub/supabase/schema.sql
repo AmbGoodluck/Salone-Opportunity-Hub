@@ -15,17 +15,29 @@ CREATE TABLE IF NOT EXISTS profiles (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Organizations table (extends Supabase auth.users — 1:1 with user)
+CREATE TABLE IF NOT EXISTS organizations (
+  id UUID REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Opportunities table
 CREATE TABLE IF NOT EXISTS opportunities (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT NOT NULL,
+  slug TEXT UNIQUE,
   organization TEXT NOT NULL,
+  organization_id UUID REFERENCES organizations(id) ON DELETE SET NULL,
   description TEXT NOT NULL,
   requirements TEXT,
   how_to_apply TEXT,
-  type TEXT NOT NULL CHECK (type IN ('job', 'internship', 'scholarship', 'event')),
+  type TEXT NOT NULL CHECK (type IN ('job', 'internship', 'scholarship', 'event', 'grant')),
   category TEXT NOT NULL,
   location TEXT,
+  location_type TEXT DEFAULT 'onsite' CHECK (location_type IN ('remote', 'onsite', 'hybrid')),
   is_remote BOOLEAN DEFAULT false,
   deadline TIMESTAMP WITH TIME ZONE,
   funding_amount TEXT,
@@ -34,6 +46,9 @@ CREATE TABLE IF NOT EXISTS opportunities (
   image_url TEXT,
   source_url TEXT,
   is_verified BOOLEAN DEFAULT false,
+  required_skills JSONB DEFAULT '[]',
+  education_level TEXT,
+  experience_level TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -80,6 +95,9 @@ CREATE INDEX IF NOT EXISTS idx_saved_opportunities_opportunity ON saved_opportun
 CREATE INDEX IF NOT EXISTS idx_cvs_user ON cvs(user_id);
 CREATE INDEX IF NOT EXISTS idx_profiles_email ON profiles(email);
 
+CREATE INDEX IF NOT EXISTS idx_opportunities_slug ON opportunities(slug);
+CREATE INDEX IF NOT EXISTS idx_opportunities_organization_id ON opportunities(organization_id);
+
 -- Full-text search index
 CREATE INDEX IF NOT EXISTS idx_opportunities_fts ON opportunities
   USING GIN (to_tsvector('english', coalesce(title, '') || ' ' || coalesce(description, '') || ' ' || coalesce(organization, '')));
@@ -90,6 +108,7 @@ CREATE INDEX IF NOT EXISTS idx_opportunities_fts ON opportunities
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE saved_opportunities ENABLE ROW LEVEL SECURITY;
 ALTER TABLE cvs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE organizations ENABLE ROW LEVEL SECURITY;
 
 -- Opportunities are public
 ALTER TABLE opportunities ENABLE ROW LEVEL SECURITY;
@@ -111,6 +130,26 @@ CREATE POLICY "Users can update their own profile"
 -- Opportunities (public read)
 CREATE POLICY "Anyone can view opportunities"
   ON opportunities FOR SELECT USING (true);
+
+-- Organizations can manage their own opportunities
+CREATE POLICY "Organizations can insert opportunities"
+  ON opportunities FOR INSERT WITH CHECK (auth.uid() = organization_id);
+
+CREATE POLICY "Organizations can update their own opportunities"
+  ON opportunities FOR UPDATE USING (auth.uid() = organization_id);
+
+CREATE POLICY "Organizations can delete their own opportunities"
+  ON opportunities FOR DELETE USING (auth.uid() = organization_id);
+
+-- Organizations (public read, self-manage)
+CREATE POLICY "Anyone can view organizations"
+  ON organizations FOR SELECT USING (true);
+
+CREATE POLICY "Users can insert their own organization"
+  ON organizations FOR INSERT WITH CHECK (auth.uid() = id);
+
+CREATE POLICY "Users can update their own organization"
+  ON organizations FOR UPDATE USING (auth.uid() = id);
 
 -- Saved opportunities
 CREATE POLICY "Users can view their saved opportunities"
@@ -162,6 +201,39 @@ $$;
 CREATE OR REPLACE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- ============================================================
+-- Auto-generate unique slug for opportunities
+-- ============================================================
+CREATE OR REPLACE FUNCTION generate_opportunity_slug()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  base_slug TEXT;
+  new_slug TEXT;
+  counter INTEGER := 0;
+BEGIN
+  IF NEW.slug IS NULL OR NEW.slug = '' THEN
+    base_slug := lower(regexp_replace(NEW.title, '[^a-zA-Z0-9\s-]', '', 'g'));
+    base_slug := regexp_replace(base_slug, '\s+', '-', 'g');
+    base_slug := regexp_replace(base_slug, '-+', '-', 'g');
+    base_slug := trim(both '-' from base_slug);
+    new_slug := base_slug;
+    WHILE EXISTS (SELECT 1 FROM opportunities WHERE slug = new_slug AND id != COALESCE(NEW.id, '00000000-0000-0000-0000-000000000000'::uuid)) LOOP
+      counter := counter + 1;
+      new_slug := base_slug || '-' || substr(md5(random()::text), 1, 6);
+    END LOOP;
+    NEW.slug := new_slug;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trigger_generate_opportunity_slug ON opportunities;
+CREATE TRIGGER trigger_generate_opportunity_slug
+  BEFORE INSERT OR UPDATE OF title ON opportunities
+  FOR EACH ROW EXECUTE FUNCTION generate_opportunity_slug();
 
 -- ============================================================
 -- Storage buckets (run these separately in Supabase Storage UI
