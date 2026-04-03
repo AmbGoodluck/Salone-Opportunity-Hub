@@ -1,8 +1,9 @@
 #:schema node_modules/wrangler/config-schema.json
-name = "salone-opportunity-hub"
+name = "salone-oppo-hub"
 main = ".open-next/worker.js"
 compatibility_date = "2025-12-01"
 compatibility_flags = ["nodejs_compat"]
+minify = true
 
 [assets]
 directory = ".open-next/assets"
