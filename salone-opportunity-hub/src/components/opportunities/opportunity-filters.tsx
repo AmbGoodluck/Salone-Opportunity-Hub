@@ -22,6 +22,14 @@ const DEADLINE_OPTIONS = [
   { value: 'quarter', label: 'Next 3 months' },
 ]
 
+const REGION_OPTIONS = [
+  { value: 'africa', label: 'Africa' },
+  { value: 'asia', label: 'Asia' },
+  { value: 'europe', label: 'Europe' },
+  { value: 'americas', label: 'Americas' },
+  { value: 'oceania', label: 'Oceania' },
+]
+
 export function OpportunityFilters({ activeFilterCount = 0 }: { activeFilterCount?: number }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -70,7 +78,8 @@ export function OpportunityFilters({ activeFilterCount = 0 }: { activeFilterCoun
   const activeCategories = searchParams.getAll('category')
   const activeDeadline = searchParams.get('deadline')
   const activeStudyLevels = searchParams.getAll('study_level')
-  const hasFilters = activeTypes.length > 0 || activeCategories.length > 0 || activeDeadline || activeStudyLevels.length > 0
+  const activeRegions = searchParams.getAll('region')
+  const hasFilters = activeTypes.length > 0 || activeCategories.length > 0 || activeDeadline || activeStudyLevels.length > 0 || activeRegions.length > 0
 
   return (
     <div ref={ref} className="relative">
@@ -192,6 +201,25 @@ export function OpportunityFilters({ activeFilterCount = 0 }: { activeFilterCoun
                   />
                   <Label htmlFor={`level-${level}`} className="text-sm font-normal cursor-pointer">
                     {level}
+                  </Label>
+                </div>
+              ))}
+            </div>
+
+            <Separator />
+
+            {/* Region / Continent */}
+            <div className="space-y-2">
+              <h4 className="font-semibold text-xs text-gray-500 uppercase tracking-wide">Region</h4>
+              {REGION_OPTIONS.map((region) => (
+                <div key={region.value} className="flex items-center gap-2">
+                  <Checkbox
+                    id={`region-${region.value}`}
+                    checked={activeRegions.includes(region.value)}
+                    onCheckedChange={(checked) => updateParam('region', region.value, !!checked)}
+                  />
+                  <Label htmlFor={`region-${region.value}`} className="text-sm font-normal cursor-pointer">
+                    {region.label}
                   </Label>
                 </div>
               ))}

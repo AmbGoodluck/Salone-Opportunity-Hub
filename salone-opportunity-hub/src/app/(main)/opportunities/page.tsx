@@ -31,6 +31,7 @@ interface SearchParams {
   sort?: string
   page?: string
   local?: string
+  region?: string | string[]
 }
 
 async function OpportunitiesGrid({ searchParams }: { searchParams: SearchParams }) {
@@ -105,6 +106,26 @@ async function OpportunitiesGrid({ searchParams }: { searchParams: SearchParams 
     )
   }
 
+  // Region / continent filter
+  const regions = Array.isArray(searchParams.region)
+    ? searchParams.region
+    : searchParams.region
+    ? [searchParams.region]
+    : []
+  if (regions.length > 0) {
+    const regionCountries: Record<string, string[]> = {
+      africa: ['sierra leone', 'nigeria', 'ghana', 'kenya', 'south africa', 'ethiopia', 'tanzania', 'uganda', 'rwanda', 'senegal', 'cameroon', 'egypt', 'morocco', 'liberia', 'gambia', 'guinea', 'mali', 'niger', 'togo', 'benin', 'africa'],
+      asia: ['china', 'japan', 'india', 'korea', 'singapore', 'malaysia', 'thailand', 'vietnam', 'indonesia', 'philippines', 'pakistan', 'bangladesh', 'sri lanka', 'taiwan', 'hong kong', 'asia'],
+      europe: ['united kingdom', 'uk', 'germany', 'france', 'netherlands', 'sweden', 'norway', 'denmark', 'finland', 'switzerland', 'belgium', 'austria', 'spain', 'italy', 'portugal', 'ireland', 'poland', 'europe'],
+      americas: ['united states', 'usa', 'canada', 'brazil', 'mexico', 'colombia', 'argentina', 'chile', 'peru', 'america', 'americas'],
+      oceania: ['australia', 'new zealand', 'fiji', 'oceania'],
+    }
+    const patterns = regions.flatMap((r) => regionCountries[r] ?? []).map((c) => `location.ilike.%${c}%`)
+    if (patterns.length > 0) {
+      query = query.or(patterns.join(','))
+    }
+  }
+
   // Sort
   const sort = searchParams.sort ?? 'newest'
   if (sort === 'deadline') {
@@ -174,6 +195,7 @@ async function OpportunitiesGrid({ searchParams }: { searchParams: SearchParams 
     types.length +
     categories.length +
     studyLevels.length +
+    regions.length +
     (searchParams.deadline ? 1 : 0)
 
   if (!sortedOpportunities || sortedOpportunities.length === 0) {
@@ -264,6 +286,7 @@ export default async function OpportunitiesPage({
     (Array.isArray(params.type) ? params.type.length : params.type ? 1 : 0) +
     (Array.isArray(params.category) ? params.category.length : params.category ? 1 : 0) +
     (Array.isArray(params.study_level) ? params.study_level.length : params.study_level ? 1 : 0) +
+    (Array.isArray(params.region) ? params.region.length : params.region ? 1 : 0) +
     (params.deadline ? 1 : 0)
 
   // Fetch opportunity counts for stats
