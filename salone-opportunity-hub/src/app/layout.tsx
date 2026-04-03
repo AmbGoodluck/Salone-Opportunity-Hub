@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     "Freetown",
   ],
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://salone-opportunity-hub.pages.dev"
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://saloneopportunities.org"
   ),
   openGraph: {
     type: "website",
