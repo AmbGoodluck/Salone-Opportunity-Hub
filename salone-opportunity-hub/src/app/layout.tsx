@@ -32,6 +32,17 @@ export const metadata: Metadata = {
     locale: "en_US",
     siteName: "Salone Opportunity Hub",
   },
+  icons: {
+    icon: [
+      { url: "/icons/icon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [
+      { url: "/icons/icon-152x152.png", sizes: "152x152", type: "image/png" },
+      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
+    ],
+    shortcut: "/icons/icon-96x96.png",
+  },
 }
 
 export default function RootLayout({
@@ -47,7 +58,6 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Salone Hub" />
-        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
       </head>
       <body className="min-h-full flex flex-col bg-gray-50 font-sans">
         {children}
