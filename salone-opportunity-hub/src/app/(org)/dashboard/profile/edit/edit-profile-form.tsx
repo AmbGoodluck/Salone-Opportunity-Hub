@@ -67,7 +67,7 @@ export function EditProfileForm({ organization }: { organization: Organization }
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error)
-      setSuccess(true)
+      router.push('/dashboard')
       router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save profile')

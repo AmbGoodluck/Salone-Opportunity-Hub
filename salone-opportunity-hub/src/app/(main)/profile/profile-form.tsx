@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -52,6 +53,7 @@ interface ProfileFormProps {
 }
 
 export function ProfileForm({ userId, email, initialProfile }: ProfileFormProps) {
+  const router = useRouter()
   const [isSaving, setIsSaving] = useState(false)
   const [preferredTypes, setPreferredTypes] = useState<string[]>(
     (initialProfile?.preferred_types as string[]) ?? []
@@ -134,12 +136,14 @@ export function ProfileForm({ userId, email, initialProfile }: ProfileFormProps)
         .eq('id', userId)
 
       if (expError) {
-        toast.success('Profile saved! Experience level will sync after project restart.')
+        toast.success('Profile saved!')
       } else {
         toast.success('Profile saved!')
       }
+      router.push('/opportunities')
     } else {
       toast.success('Profile saved!')
+      router.push('/opportunities')
     }
     setIsSaving(false)
   }
