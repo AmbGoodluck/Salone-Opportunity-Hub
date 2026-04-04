@@ -14,7 +14,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
 })
 
 type LoginForm = z.infer<typeof loginSchema>
@@ -181,6 +181,22 @@ export default function LoginContent() {
           Don&apos;t have an account?{' '}
           <Link href="/signup" className="text-blue-700 hover:text-blue-800 font-medium">
             Create one free
+          </Link>
+        </p>
+
+        <div className="relative my-4">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-gray-200" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-white px-2 text-gray-500">or</span>
+          </div>
+        </div>
+
+        <p className="text-center text-sm text-gray-600">
+          Are you an organisation?{' '}
+          <Link href="/org-login" className="text-blue-700 hover:text-blue-800 font-medium">
+            Sign in as organisation
           </Link>
         </p>
       </CardContent>
