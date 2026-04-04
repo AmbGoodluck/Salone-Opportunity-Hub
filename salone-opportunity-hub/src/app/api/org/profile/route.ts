@@ -22,7 +22,7 @@ export async function PUT(request: Request) {
     }
 
     const body = await request.json()
-    const { name, tagline, about, website, email, location } = body
+    const { name, tagline, about, website, email, location, phone } = body
 
     if (!name || name.trim().length < 2) {
       return NextResponse.json({ error: 'Organization name is required' }, { status: 400 })
@@ -33,8 +33,9 @@ export async function PUT(request: Request) {
       tagline: tagline?.trim() || null,
       about: about?.trim() || null,
       website: website?.trim() || null,
-      email: email?.trim() || org.id, // keep existing if not changed
+      email: email?.trim() || org.id,
       location: location?.trim() || null,
+      phone: phone?.trim() || null,
       updated_at: new Date().toISOString(),
     }
 

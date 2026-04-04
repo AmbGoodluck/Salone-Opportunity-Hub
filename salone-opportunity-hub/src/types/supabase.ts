@@ -69,11 +69,13 @@ export type Database = {
           name: string
           slug: string | null
           email: string
+          phone: string | null
           logo_url: string | null
           tagline: string | null
           about: string | null
           website: string | null
           location: string | null
+          gallery_urls: string[] | null
           created_at: string
           updated_at: string
         }
@@ -82,11 +84,13 @@ export type Database = {
           name: string
           slug?: string | null
           email: string
+          phone?: string | null
           logo_url?: string | null
           tagline?: string | null
           about?: string | null
           website?: string | null
           location?: string | null
+          gallery_urls?: string[] | null
           created_at?: string
           updated_at?: string
         }
@@ -95,11 +99,13 @@ export type Database = {
           name?: string
           slug?: string | null
           email?: string
+          phone?: string | null
           logo_url?: string | null
           tagline?: string | null
           about?: string | null
           website?: string | null
           location?: string | null
+          gallery_urls?: string[] | null
           created_at?: string
           updated_at?: string
         }

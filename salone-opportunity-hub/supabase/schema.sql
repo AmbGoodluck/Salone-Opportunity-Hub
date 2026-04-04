@@ -26,6 +26,8 @@ CREATE TABLE IF NOT EXISTS organizations (
   about TEXT,
   website TEXT,
   location TEXT,
+  phone TEXT,
+  gallery_urls TEXT[] DEFAULT '{}',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );

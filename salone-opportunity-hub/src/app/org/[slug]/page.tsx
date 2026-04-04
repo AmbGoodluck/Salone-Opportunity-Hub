@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { MapPin, Globe, Mail, Calendar, ArrowLeft } from 'lucide-react'
+import { MapPin, Globe, Mail, Calendar, ArrowLeft, Phone } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -105,6 +105,25 @@ export default async function PublicOrgProfilePage({ params }: Props) {
           </section>
         )}
 
+        {/* Photo Gallery */}
+        {org.gallery_urls && org.gallery_urls.length > 0 && (
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mb-3">Gallery</h2>
+            <div className="bg-white rounded-xl border border-gray-200 p-4">
+              <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-thin">
+                {org.gallery_urls.map((url, i) => (
+                  <img
+                    key={url}
+                    src={url}
+                    alt={`${org.name} photo ${i + 1}`}
+                    className="w-48 h-36 sm:w-56 sm:h-40 flex-shrink-0 rounded-lg object-cover snap-start border border-gray-100 hover:shadow-md transition-shadow"
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Open Opportunities */}
         <section>
           <div className="flex items-center justify-between mb-4">
@@ -187,11 +206,11 @@ export default async function PublicOrgProfilePage({ params }: Props) {
         </section>
 
         {/* Contact Info */}
-        {(org.website || org.email || org.location) && (
+        {(org.website || org.email || org.location || org.phone) && (
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mb-3">Contact</h2>
             <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <div className="grid sm:grid-cols-3 gap-4">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {org.website && (
                   <a
                     href={org.website}
@@ -210,6 +229,15 @@ export default async function PublicOrgProfilePage({ params }: Props) {
                   >
                     <Mail className="h-4 w-4" />
                     {org.email}
+                  </a>
+                )}
+                {org.phone && (
+                  <a
+                    href={`tel:${org.phone}`}
+                    className="flex items-center gap-2 text-sm text-blue-700 hover:text-blue-800"
+                  >
+                    <Phone className="h-4 w-4" />
+                    {org.phone}
                   </a>
                 )}
                 {org.location && (
