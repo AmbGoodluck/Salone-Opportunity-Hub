@@ -147,6 +147,15 @@ export class OpportunityScraper {
       { country: 'us', what: 'grant program africa', what_or: 'youth scholarship' },
       { country: 'us', what: 'foreign affairs', what_or: 'international development africa' },
       { country: 'us', what: 'nonprofit africa', what_or: 'humanitarian internship' },
+      // Europe searches
+      { country: 'de', what: 'internship africa', what_or: 'development program fellowship' },
+      { country: 'de', what: 'NGO international', what_or: 'scholarship africa' },
+      { country: 'fr', what: 'internship africa', what_or: 'fellowship development' },
+      { country: 'nl', what: 'africa development', what_or: 'internship fellowship' },
+      { country: 'at', what: 'international development', what_or: 'africa fellowship' },
+      // Canada / Australia
+      { country: 'ca', what: 'africa internship', what_or: 'grant fellowship scholarship' },
+      { country: 'au', what: 'africa scholarship', what_or: 'development fellowship' },
       // South Africa / Africa searches
       { country: 'za', what: 'west africa', what_or: 'NGO development' },
       { country: 'za', what: 'internship youth', what_or: 'grant fellowship' },

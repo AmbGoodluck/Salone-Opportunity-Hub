@@ -8,3 +8,7 @@ minify = true
 [assets]
 directory = ".open-next/assets"
 binding = "ASSETS"
+
+# Cron Triggers - scrape opportunities every 15 minutes
+[triggers]
+crons = ["*/15 * * * *"]

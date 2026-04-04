@@ -28,6 +28,11 @@ export async function POST(request: NextRequest) {
     { name: 'rss_reliefweb', fn: () => scraper.scrapeRSSFeed('https://reliefweb.int/jobs/rss.xml') },
     { name: 'rss_reliefweb_training', fn: () => scraper.scrapeRSSFeed('https://reliefweb.int/training/rss.xml') },
     { name: 'rss_trust_africa', fn: () => scraper.scrapeRSSFeed('https://trustafrica.org/feed/') },
+    { name: 'rss_undp', fn: () => scraper.scrapeRSSFeed('https://jobs.undp.org/cj_rss_feed.cfm') },
+    { name: 'rss_un_careers', fn: () => scraper.scrapeRSSFeed('https://careers.un.org/lbw/home.aspx?viewRSS=1') },
+    { name: 'rss_eurobrussels', fn: () => scraper.scrapeRSSFeed('https://www.eurobrussels.com/rss/rss_jobs.xml') },
+    { name: 'rss_usaid', fn: () => scraper.scrapeRSSFeed('https://www.usaid.gov/rss/careers.xml') },
+    { name: 'rss_globalgiving', fn: () => scraper.scrapeRSSFeed('https://www.globalgiving.org/dy/v2/content/rss/project-listing.xml') },
   ]
 
   for (const source of sources) {
