@@ -19,7 +19,13 @@ CREATE TABLE IF NOT EXISTS profiles (
 CREATE TABLE IF NOT EXISTS organizations (
   id UUID REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,
   name TEXT NOT NULL,
+  slug TEXT UNIQUE,
   email TEXT UNIQUE NOT NULL,
+  logo_url TEXT,
+  tagline TEXT,
+  about TEXT,
+  website TEXT,
+  location TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -97,6 +103,7 @@ CREATE INDEX IF NOT EXISTS idx_profiles_email ON profiles(email);
 
 CREATE INDEX IF NOT EXISTS idx_opportunities_slug ON opportunities(slug);
 CREATE INDEX IF NOT EXISTS idx_opportunities_organization_id ON opportunities(organization_id);
+CREATE INDEX IF NOT EXISTS idx_organizations_slug ON organizations(slug);
 
 -- Full-text search index
 CREATE INDEX IF NOT EXISTS idx_opportunities_fts ON opportunities
@@ -236,8 +243,42 @@ CREATE TRIGGER trigger_generate_opportunity_slug
   FOR EACH ROW EXECUTE FUNCTION generate_opportunity_slug();
 
 -- ============================================================
+-- Auto-generate unique slug for organizations
+-- ============================================================
+CREATE OR REPLACE FUNCTION generate_organization_slug()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  base_slug TEXT;
+  new_slug TEXT;
+  counter INTEGER := 0;
+BEGIN
+  IF NEW.slug IS NULL OR NEW.slug = '' THEN
+    base_slug := lower(regexp_replace(NEW.name, '[^a-zA-Z0-9\s-]', '', 'g'));
+    base_slug := regexp_replace(base_slug, '\s+', '-', 'g');
+    base_slug := regexp_replace(base_slug, '-+', '-', 'g');
+    base_slug := trim(both '-' from base_slug);
+    new_slug := base_slug;
+    WHILE EXISTS (SELECT 1 FROM organizations WHERE slug = new_slug AND id != COALESCE(NEW.id, '00000000-0000-0000-0000-000000000000'::uuid)) LOOP
+      counter := counter + 1;
+      new_slug := base_slug || '-' || substr(md5(random()::text), 1, 6);
+    END LOOP;
+    NEW.slug := new_slug;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trigger_generate_organization_slug ON organizations;
+CREATE TRIGGER trigger_generate_organization_slug
+  BEFORE INSERT OR UPDATE OF name ON organizations
+  FOR EACH ROW EXECUTE FUNCTION generate_organization_slug();
+
+-- ============================================================
 -- Storage buckets (run these separately in Supabase Storage UI
 -- or via the API)
 -- ============================================================
 -- Bucket: cv-photos (public)
 -- Bucket: opportunity-images (public)
+-- Bucket: org-logos (public)

@@ -67,21 +67,39 @@ export type Database = {
         Row: {
           id: string
           name: string
+          slug: string | null
           email: string
+          logo_url: string | null
+          tagline: string | null
+          about: string | null
+          website: string | null
+          location: string | null
           created_at: string
           updated_at: string
         }
         Insert: {
           id: string
           name: string
+          slug?: string | null
           email: string
+          logo_url?: string | null
+          tagline?: string | null
+          about?: string | null
+          website?: string | null
+          location?: string | null
           created_at?: string
           updated_at?: string
         }
         Update: {
           id?: string
           name?: string
+          slug?: string | null
           email?: string
+          logo_url?: string | null
+          tagline?: string | null
+          about?: string | null
+          website?: string | null
+          location?: string | null
           created_at?: string
           updated_at?: string
         }

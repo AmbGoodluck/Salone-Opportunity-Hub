@@ -4,8 +4,7 @@ import type { Organization } from '@/types'
 
 /**
  * Server-side guard: requires the current user to be an organization.
- * Equivalent to Django's @organization_required decorator.
- * Redirects to home if the user is not authenticated or not an organization.
+ * Redirects to org-login if not authenticated, home if not an org.
  * Returns the organization record and supabase client.
  */
 export async function requireOrganization() {
@@ -23,7 +22,6 @@ export async function requireOrganization() {
     .single()
 
   if (!organization) {
-    // User exists but is not an organization - redirect to home
     redirect('/')
   }
 
@@ -47,4 +45,25 @@ export async function getOrganization() {
     .single()
 
   return organization as Organization | null
+}
+
+/**
+ * Check if an organization has completed the required profile fields.
+ * Required: name, tagline, about, location
+ */
+export function isProfileComplete(org: Organization): boolean {
+  return Boolean(org.name && org.tagline && org.about && org.location)
+}
+
+/**
+ * Get the list of missing profile fields.
+ */
+export function getMissingProfileFields(org: Organization): string[] {
+  const required: { key: keyof Organization; label: string }[] = [
+    { key: 'name', label: 'Organization Name' },
+    { key: 'tagline', label: 'Tagline' },
+    { key: 'about', label: 'About' },
+    { key: 'location', label: 'Location' },
+  ]
+  return required.filter((f) => !org[f.key]).map((f) => f.label)
 }
