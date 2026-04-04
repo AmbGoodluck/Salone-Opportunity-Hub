@@ -46,7 +46,10 @@ export async function POST(request: Request) {
       .upload(filePath, file, { upsert: true, contentType: file.type })
 
     if (uploadError) {
-      return NextResponse.json({ error: uploadError.message }, { status: 500 })
+      const msg = uploadError.message.includes('Bucket not found')
+        ? 'Storage bucket "org-logos" not found. Please create it in the Supabase dashboard.'
+        : uploadError.message
+      return NextResponse.json({ error: msg }, { status: 500 })
     }
 
     const { data: { publicUrl } } = supabase.storage

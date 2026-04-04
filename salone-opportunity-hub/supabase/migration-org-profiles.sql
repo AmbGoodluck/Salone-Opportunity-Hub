@@ -61,8 +61,25 @@ UPDATE organizations SET name = name WHERE slug IS NULL;
 
 -- ============================================================
 -- Storage bucket for organization logos
--- Run this separately or via Supabase dashboard:
--- CREATE BUCKET 'org-logos' (public)
 -- ============================================================
--- INSERT INTO storage.buckets (id, name, public) VALUES ('org-logos', 'org-logos', true)
--- ON CONFLICT (id) DO NOTHING;
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('org-logos', 'org-logos', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Allow authenticated users to upload their own logo
+CREATE POLICY "Org users can upload logos"
+  ON storage.objects FOR INSERT
+  TO authenticated
+  WITH CHECK (bucket_id = 'org-logos' AND (storage.foldername(name))[1] = auth.uid()::text);
+
+-- Allow authenticated users to update/replace their own logo
+CREATE POLICY "Org users can update logos"
+  ON storage.objects FOR UPDATE
+  TO authenticated
+  USING (bucket_id = 'org-logos' AND (storage.foldername(name))[1] = auth.uid()::text);
+
+-- Allow public read access to all logos
+CREATE POLICY "Public can view org logos"
+  ON storage.objects FOR SELECT
+  TO public
+  USING (bucket_id = 'org-logos');
