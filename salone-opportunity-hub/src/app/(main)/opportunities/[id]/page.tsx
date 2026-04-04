@@ -8,7 +8,7 @@ import { DeadlineBadge } from '@/components/ui/deadline-badge'
 import { SaveButton } from '@/components/opportunities/save-button'
 import { ShareButtons } from '@/components/opportunities/share-buttons'
 import { OpportunityCard } from '@/components/opportunities/opportunity-card'
-import { ChevronLeft, MapPin, Building2, GraduationCap, DollarSign, ExternalLink, Globe } from 'lucide-react'
+import { ChevronLeft, MapPin, Building2, GraduationCap, DollarSign, ExternalLink, Globe, FileText, CheckCircle, Send, Calendar, Briefcase } from 'lucide-react'
 import { TYPE_COLORS, OPPORTUNITY_TYPES } from '@/lib/utils'
 import { cn, formatDeadline } from '@/lib/utils'
 import { format, parseISO } from 'date-fns'
@@ -110,18 +110,82 @@ export default async function OpportunityDetailPage({ params }: Props) {
           </div>
 
           {/* Description */}
-          <section>
-            <h2 className="text-lg font-semibold text-gray-900 mb-3">About this opportunity</h2>
-            <div className="prose prose-sm max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap">
+          <section className="bg-white rounded-xl border border-gray-200 p-6">
+            <div className="flex items-center gap-2.5 mb-4">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50">
+                <FileText className="h-4 w-4 text-blue-700" />
+              </div>
+              <h2 className="text-lg font-semibold text-gray-900">About This Opportunity</h2>
+            </div>
+            <div className="prose prose-sm max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap pl-[42px]">
               {opportunity.description}
             </div>
           </section>
 
+          {/* Key Details Summary */}
+          {(opportunity.deadline || opportunity.location || opportunity.funding_amount || opportunity.study_level) && (
+            <section className="bg-gradient-to-r from-blue-50 to-white rounded-xl border border-blue-100 p-6">
+              <div className="flex items-center gap-2.5 mb-4">
+                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100">
+                  <Briefcase className="h-4 w-4 text-blue-700" />
+                </div>
+                <h2 className="text-lg font-semibold text-gray-900">Key Details</h2>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pl-[42px]">
+                {opportunity.deadline && (
+                  <div className="flex items-start gap-3">
+                    <Calendar className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Deadline</p>
+                      <p className={cn('text-sm font-medium mt-0.5', deadlineInfo.urgency === 'urgent' ? 'text-red-600' : 'text-gray-800')}>
+                        {format(parseISO(opportunity.deadline), 'MMMM d, yyyy')}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {opportunity.location && (
+                  <div className="flex items-start gap-3">
+                    <MapPin className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Location</p>
+                      <p className="text-sm font-medium text-gray-800 mt-0.5">
+                        {opportunity.is_remote ? 'Remote / Online' : opportunity.location}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {opportunity.funding_amount && (
+                  <div className="flex items-start gap-3">
+                    <DollarSign className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Funding</p>
+                      <p className="text-sm font-medium text-gray-800 mt-0.5">{opportunity.funding_amount}</p>
+                    </div>
+                  </div>
+                )}
+                {opportunity.study_level && (
+                  <div className="flex items-start gap-3">
+                    <GraduationCap className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Study Level</p>
+                      <p className="text-sm font-medium text-gray-800 mt-0.5">{opportunity.study_level}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </section>
+          )}
+
           {/* Requirements */}
           {opportunity.requirements && (
-            <section>
-              <h2 className="text-lg font-semibold text-gray-900 mb-3">Requirements</h2>
-              <div className="prose prose-sm max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap">
+            <section className="bg-white rounded-xl border border-gray-200 p-6">
+              <div className="flex items-center gap-2.5 mb-4">
+                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-50">
+                  <CheckCircle className="h-4 w-4 text-amber-600" />
+                </div>
+                <h2 className="text-lg font-semibold text-gray-900">Requirements</h2>
+              </div>
+              <div className="prose prose-sm max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap pl-[42px]">
                 {opportunity.requirements}
               </div>
             </section>
@@ -129,9 +193,14 @@ export default async function OpportunityDetailPage({ params }: Props) {
 
           {/* How to Apply */}
           {opportunity.how_to_apply && (
-            <section>
-              <h2 className="text-lg font-semibold text-gray-900 mb-3">How to Apply</h2>
-              <div className="prose prose-sm max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap">
+            <section className="bg-white rounded-xl border border-gray-200 p-6">
+              <div className="flex items-center gap-2.5 mb-4">
+                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-green-50">
+                  <Send className="h-4 w-4 text-green-600" />
+                </div>
+                <h2 className="text-lg font-semibold text-gray-900">How to Apply</h2>
+              </div>
+              <div className="prose prose-sm max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap pl-[42px]">
                 {opportunity.how_to_apply}
               </div>
             </section>
