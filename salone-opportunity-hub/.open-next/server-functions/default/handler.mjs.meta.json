@@ -3752,6 +3752,11 @@
       "imports": [],
       "format": "cjs"
     },
+    ".open-next/server-functions/default/.next/server/app/(org)/dashboard/page_client-reference-manifest.js": {
+      "bytes": 19055,
+      "imports": [],
+      "format": "cjs"
+    },
     ".open-next/server-functions/default/.next/server/app/api/scrape/route_client-reference-manifest.js": {
       "bytes": 315,
       "imports": [],
@@ -3777,18 +3782,13 @@
       "imports": [],
       "format": "cjs"
     },
+    ".open-next/server-functions/default/.next/server/app/(auth)/login/page_client-reference-manifest.js": {
+      "bytes": 14191,
+      "imports": [],
+      "format": "cjs"
+    },
     ".open-next/server-functions/default/.next/server/app/(auth)/org-login/page_client-reference-manifest.js": {
       "bytes": 14193,
-      "imports": [],
-      "format": "cjs"
-    },
-    ".open-next/server-functions/default/.next/server/app/(auth)/login/page_client-reference-manifest.js": {
-      "bytes": 14173,
-      "imports": [],
-      "format": "cjs"
-    },
-    ".open-next/server-functions/default/.next/server/app/(main)/profile/page_client-reference-manifest.js": {
-      "bytes": 19460,
       "imports": [],
       "format": "cjs"
     },
@@ -3797,8 +3797,8 @@
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/app/(main)/cv-builder/page_client-reference-manifest.js": {
-      "bytes": 19373,
+    ".open-next/server-functions/default/.next/server/app/(main)/profile/page_client-reference-manifest.js": {
+      "bytes": 19460,
       "imports": [],
       "format": "cjs"
     },
@@ -3807,8 +3807,13 @@
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/app/(org)/dashboard/page_client-reference-manifest.js": {
-      "bytes": 19055,
+    ".open-next/server-functions/default/.next/server/app/(main)/cv-builder/page_client-reference-manifest.js": {
+      "bytes": 19373,
+      "imports": [],
+      "format": "cjs"
+    },
+    ".open-next/server-functions/default/.next/server/app/(org)/dashboard/post/page_client-reference-manifest.js": {
+      "bytes": 16018,
       "imports": [],
       "format": "cjs"
     },
@@ -3832,11 +3837,6 @@
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/app/(org)/dashboard/post/page_client-reference-manifest.js": {
-      "bytes": 16018,
-      "imports": [],
-      "format": "cjs"
-    },
     ".open-next/server-functions/default/.next/server/app/(org)/dashboard/edit/[id]/page_client-reference-manifest.js": {
       "bytes": 16054,
       "imports": [],
@@ -3848,7 +3848,7 @@
       "format": "cjs"
     },
     "node_modules/.pnpm/next@16.2.2_@babel+core@7.2_adfc5978a423a2af819d8e4d2c5f7ae4/node_modules/next/dist/server/load-manifest.external.js": {
-      "bytes": 47456,
+      "bytes": 46857,
       "imports": [
         {
           "path": "path",
@@ -3896,6 +3896,11 @@
           "original": "C:\\Users\\jalloho\\Desktop\\OpportunityHub\\Salone-Opportunity-Hub\\salone-opportunity-hub\\.open-next\\server-functions\\default\\.next\\server\\app\\auth\\callback\\route_client-reference-manifest.js"
         },
         {
+          "path": ".open-next/server-functions/default/.next/server/app/(org)/dashboard/page_client-reference-manifest.js",
+          "kind": "require-call",
+          "original": "C:\\Users\\jalloho\\Desktop\\OpportunityHub\\Salone-Opportunity-Hub\\salone-opportunity-hub\\.open-next\\server-functions\\default\\.next\\server\\app\\(org)\\dashboard\\page_client-reference-manifest.js"
+        },
+        {
           "path": ".open-next/server-functions/default/.next/server/app/api/scrape/route_client-reference-manifest.js",
           "kind": "require-call",
           "original": "C:\\Users\\jalloho\\Desktop\\OpportunityHub\\Salone-Opportunity-Hub\\salone-opportunity-hub\\.open-next\\server-functions\\default\\.next\\server\\app\\api\\scrape\\route_client-reference-manifest.js"
@@ -3921,19 +3926,14 @@
           "original": "C:\\Users\\jalloho\\Desktop\\OpportunityHub\\Salone-Opportunity-Hub\\salone-opportunity-hub\\.open-next\\server-functions\\default\\.next\\server\\app\\(auth)\\org-signup\\page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/(auth)/org-login/page_client-reference-manifest.js",
-          "kind": "require-call",
-          "original": "C:\\Users\\jalloho\\Desktop\\OpportunityHub\\Salone-Opportunity-Hub\\salone-opportunity-hub\\.open-next\\server-functions\\default\\.next\\server\\app\\(auth)\\org-login\\page_client-reference-manifest.js"
-        },
-        {
           "path": ".open-next/server-functions/default/.next/server/app/(auth)/login/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "C:\\Users\\jalloho\\Desktop\\OpportunityHub\\Salone-Opportunity-Hub\\salone-opportunity-hub\\.open-next\\server-functions\\default\\.next\\server\\app\\(auth)\\login\\page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/(main)/profile/page_client-reference-manifest.js",
+          "path": ".open-next/server-functions/default/.next/server/app/(auth)/org-login/page_client-reference-manifest.js",
           "kind": "require-call",
-          "original": "C:\\Users\\jalloho\\Desktop\\OpportunityHub\\Salone-Opportunity-Hub\\salone-opportunity-hub\\.open-next\\server-functions\\default\\.next\\server\\app\\(main)\\profile\\page_client-reference-manifest.js"
+          "original": "C:\\Users\\jalloho\\Desktop\\OpportunityHub\\Salone-Opportunity-Hub\\salone-opportunity-hub\\.open-next\\server-functions\\default\\.next\\server\\app\\(auth)\\org-login\\page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/(main)/saved/page_client-reference-manifest.js",
@@ -3941,9 +3941,9 @@
           "original": "C:\\Users\\jalloho\\Desktop\\OpportunityHub\\Salone-Opportunity-Hub\\salone-opportunity-hub\\.open-next\\server-functions\\default\\.next\\server\\app\\(main)\\saved\\page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/(main)/cv-builder/page_client-reference-manifest.js",
+          "path": ".open-next/server-functions/default/.next/server/app/(main)/profile/page_client-reference-manifest.js",
           "kind": "require-call",
-          "original": "C:\\Users\\jalloho\\Desktop\\OpportunityHub\\Salone-Opportunity-Hub\\salone-opportunity-hub\\.open-next\\server-functions\\default\\.next\\server\\app\\(main)\\cv-builder\\page_client-reference-manifest.js"
+          "original": "C:\\Users\\jalloho\\Desktop\\OpportunityHub\\Salone-Opportunity-Hub\\salone-opportunity-hub\\.open-next\\server-functions\\default\\.next\\server\\app\\(main)\\profile\\page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/(main)/opportunities/page_client-reference-manifest.js",
@@ -3951,9 +3951,14 @@
           "original": "C:\\Users\\jalloho\\Desktop\\OpportunityHub\\Salone-Opportunity-Hub\\salone-opportunity-hub\\.open-next\\server-functions\\default\\.next\\server\\app\\(main)\\opportunities\\page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/(org)/dashboard/page_client-reference-manifest.js",
+          "path": ".open-next/server-functions/default/.next/server/app/(main)/cv-builder/page_client-reference-manifest.js",
           "kind": "require-call",
-          "original": "C:\\Users\\jalloho\\Desktop\\OpportunityHub\\Salone-Opportunity-Hub\\salone-opportunity-hub\\.open-next\\server-functions\\default\\.next\\server\\app\\(org)\\dashboard\\page_client-reference-manifest.js"
+          "original": "C:\\Users\\jalloho\\Desktop\\OpportunityHub\\Salone-Opportunity-Hub\\salone-opportunity-hub\\.open-next\\server-functions\\default\\.next\\server\\app\\(main)\\cv-builder\\page_client-reference-manifest.js"
+        },
+        {
+          "path": ".open-next/server-functions/default/.next/server/app/(org)/dashboard/post/page_client-reference-manifest.js",
+          "kind": "require-call",
+          "original": "C:\\Users\\jalloho\\Desktop\\OpportunityHub\\Salone-Opportunity-Hub\\salone-opportunity-hub\\.open-next\\server-functions\\default\\.next\\server\\app\\(org)\\dashboard\\post\\page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/api/org/create/route_client-reference-manifest.js",
@@ -3974,11 +3979,6 @@
           "path": ".open-next/server-functions/default/.next/server/app/(main)/opportunities/[id]/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "C:\\Users\\jalloho\\Desktop\\OpportunityHub\\Salone-Opportunity-Hub\\salone-opportunity-hub\\.open-next\\server-functions\\default\\.next\\server\\app\\(main)\\opportunities\\[id]\\page_client-reference-manifest.js"
-        },
-        {
-          "path": ".open-next/server-functions/default/.next/server/app/(org)/dashboard/post/page_client-reference-manifest.js",
-          "kind": "require-call",
-          "original": "C:\\Users\\jalloho\\Desktop\\OpportunityHub\\Salone-Opportunity-Hub\\salone-opportunity-hub\\.open-next\\server-functions\\default\\.next\\server\\app\\(org)\\dashboard\\post\\page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/(org)/dashboard/edit/[id]/page_client-reference-manifest.js",
@@ -7607,7 +7607,7 @@
       "format": "esm"
     },
     ".open-next/server-functions/default/index.mjs": {
-      "bytes": 97288,
+      "bytes": 96873,
       "imports": [
         {
           "path": "node:module",
@@ -9184,6 +9184,9 @@
         ".open-next/server-functions/default/.next/server/app/auth/callback/route_client-reference-manifest.js": {
           "bytesInOutput": 467
         },
+        ".open-next/server-functions/default/.next/server/app/(org)/dashboard/page_client-reference-manifest.js": {
+          "bytesInOutput": 18457
+        },
         ".open-next/server-functions/default/.next/server/app/api/scrape/route_client-reference-manifest.js": {
           "bytesInOutput": 462
         },
@@ -9199,26 +9202,26 @@
         ".open-next/server-functions/default/.next/server/app/(auth)/org-signup/page_client-reference-manifest.js": {
           "bytesInOutput": 13746
         },
-        ".open-next/server-functions/default/.next/server/app/(auth)/org-login/page_client-reference-manifest.js": {
-          "bytesInOutput": 13740
-        },
         ".open-next/server-functions/default/.next/server/app/(auth)/login/page_client-reference-manifest.js": {
-          "bytesInOutput": 13716
+          "bytesInOutput": 13734
         },
-        ".open-next/server-functions/default/.next/server/app/(main)/profile/page_client-reference-manifest.js": {
-          "bytesInOutput": 18910
+        ".open-next/server-functions/default/.next/server/app/(auth)/org-login/page_client-reference-manifest.js": {
+          "bytesInOutput": 13741
         },
         ".open-next/server-functions/default/.next/server/app/(main)/saved/page_client-reference-manifest.js": {
           "bytesInOutput": 18676
         },
-        ".open-next/server-functions/default/.next/server/app/(main)/cv-builder/page_client-reference-manifest.js": {
-          "bytesInOutput": 18826
+        ".open-next/server-functions/default/.next/server/app/(main)/profile/page_client-reference-manifest.js": {
+          "bytesInOutput": 18910
         },
         ".open-next/server-functions/default/.next/server/app/(main)/opportunities/page_client-reference-manifest.js": {
           "bytesInOutput": 30277
         },
-        ".open-next/server-functions/default/.next/server/app/(org)/dashboard/page_client-reference-manifest.js": {
-          "bytesInOutput": 18458
+        ".open-next/server-functions/default/.next/server/app/(main)/cv-builder/page_client-reference-manifest.js": {
+          "bytesInOutput": 18826
+        },
+        ".open-next/server-functions/default/.next/server/app/(org)/dashboard/post/page_client-reference-manifest.js": {
+          "bytesInOutput": 15522
         },
         ".open-next/server-functions/default/.next/server/app/api/org/create/route_client-reference-manifest.js": {
           "bytesInOutput": 470
@@ -9232,9 +9235,6 @@
         ".open-next/server-functions/default/.next/server/app/(main)/opportunities/[id]/page_client-reference-manifest.js": {
           "bytesInOutput": 27383
         },
-        ".open-next/server-functions/default/.next/server/app/(org)/dashboard/post/page_client-reference-manifest.js": {
-          "bytesInOutput": 15522
-        },
         ".open-next/server-functions/default/.next/server/app/(org)/dashboard/edit/[id]/page_client-reference-manifest.js": {
           "bytesInOutput": 15563
         },
@@ -9242,7 +9242,7 @@
           "bytesInOutput": 15203
         },
         "node_modules/.pnpm/next@16.2.2_@babel+core@7.2_adfc5978a423a2af819d8e4d2c5f7ae4/node_modules/next/dist/server/load-manifest.external.js": {
-          "bytesInOutput": 32121
+          "bytesInOutput": 31760
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/[turbopack]_runtime.js": {
           "bytesInOutput": 17192
@@ -9731,10 +9731,10 @@
           "bytesInOutput": 5072
         },
         ".open-next/server-functions/default/index.mjs": {
-          "bytesInOutput": 67151
+          "bytesInOutput": 66790
         }
       },
-      "bytes": 3597244
+      "bytes": 3596540
     }
   }
 }
