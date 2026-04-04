@@ -1,3 +1,0 @@
-module.exports=[65566,a=>{"use strict";var b=a.i(21071),c=a.i(17870),d=a.i(99570);a.s(["CopyLinkButton",0,function({path:a}){let[e,f]=(0,c.useState)(!1);async function g(){let b=`${window.location.origin}${a}`;await navigator.clipboard.writeText(b),f(!0),setTimeout(()=>f(!1),2e3)}return(0,b.jsx)(d.Button,{variant:"outline",size:"sm",onClick:g,className:"text-xs",children:e?"Copied!":"Copy Link"})}])}];
-
-//# sourceMappingURL=src_components_dashboard_copy-link-button_tsx_0ahmuvr._.js.map
