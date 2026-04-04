@@ -61,7 +61,7 @@ export function Footer() {
             &copy; {new Date().getFullYear()} Salone Opportunity Hub. Made with love for Sierra Leone.
           </p>
           <div className="flex items-center gap-4 text-xs text-gray-500">
-            <span>🇸🇱 Sierra Leone</span>
+            <span>By: Amadu Studios</span>
           </div>
         </div>
       </div>

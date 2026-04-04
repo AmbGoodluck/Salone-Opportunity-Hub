@@ -78,7 +78,7 @@ export async function generateWordCV(data: CVData, fileName: string): Promise<vo
           new TextRun({ text: e.institution, bold: true, size: 22 }),
           e.start_date
             ? new TextRun({
-                text: `  ${formatMonth(e.start_date)}${e.is_current ? ' — Present' : e.end_date ? ` — ${formatMonth(e.end_date)}` : ''}`,
+                text: `  ${formatMonth(e.start_date)}${e.is_current ? ' - Present' : e.end_date ? ` - ${formatMonth(e.end_date)}` : ''}`,
                 color: '9CA3AF',
                 size: 18,
               })
@@ -89,7 +89,7 @@ export async function generateWordCV(data: CVData, fileName: string): Promise<vo
       new Paragraph({
         children: [
           new TextRun({
-            text: `${e.degree}${e.field ? ` — ${e.field}` : ''}`,
+            text: `${e.degree}${e.field ? ` - ${e.field}` : ''}`,
             size: 20,
             color: '4B5563',
           }),
@@ -115,7 +115,7 @@ export async function generateWordCV(data: CVData, fileName: string): Promise<vo
         children: [
           new TextRun({ text: e.title, bold: true, size: 22 }),
           new TextRun({
-            text: `  ${formatMonth(e.start_date)}${e.is_current ? ' — Present' : e.end_date ? ` — ${formatMonth(e.end_date)}` : ''}`,
+            text: `  ${formatMonth(e.start_date)}${e.is_current ? ' - Present' : e.end_date ? ` - ${formatMonth(e.end_date)}` : ''}`,
             color: '9CA3AF',
             size: 18,
           }),
@@ -175,7 +175,7 @@ export async function generateWordCV(data: CVData, fileName: string): Promise<vo
       new Paragraph({
         children: [
           new TextRun({
-            text: `${c.issuer}${c.date ? ` — ${formatMonth(c.date)}` : ''}`,
+            text: `${c.issuer}${c.date ? ` - ${formatMonth(c.date)}` : ''}`,
             size: 18,
             color: '6B7280',
           }),

@@ -42,7 +42,7 @@ export default async function HomePage() {
                 </h1>
 
                 <p className="mt-5 text-base sm:text-lg text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                  Discover scholarships, jobs, internships, grants, and events — all in one place.
+                  Discover scholarships, jobs, internships, grants, and events - all in one place.
                   Build your CV and track applications for free.
                 </p>
 
@@ -121,7 +121,7 @@ export default async function HomePage() {
               {
                 icon: Award,
                 title: 'Build Your CV / Resume',
-                desc: 'Create a professional CV using our templates and download as PDF or Word — ready to submit with your applications.',
+                desc: 'Create a professional CV using our templates and download as PDF or Word - ready to submit with your applications.',
                 color: 'text-blue-600',
                 bg: 'bg-blue-50',
                 href: user ? '/cv-builder' : '/signup',

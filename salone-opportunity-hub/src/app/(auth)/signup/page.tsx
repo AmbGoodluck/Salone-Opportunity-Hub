@@ -54,7 +54,12 @@ export default function SignupPage() {
     })
 
     if (signUpError) {
-      setError(signUpError.message)
+      console.error('Signup error:', signUpError.message, signUpError.status)
+      if (signUpError.message?.includes('already registered')) {
+        setError('An account with this email already exists. Please log in instead.')
+      } else {
+        setError(signUpError.message)
+      }
       setIsLoading(false)
       return
     }

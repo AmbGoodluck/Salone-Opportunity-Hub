@@ -19,7 +19,7 @@ export async function createClient() {
               cookieStore.set(name, value, options)
             )
           } catch {
-            // Server Component — cookies can only be set in Server Actions or Route Handlers
+            // Server Component - cookies can only be set in Server Actions or Route Handlers
           }
         },
       },

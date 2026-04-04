@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     let userId: string
 
     if (createError) {
-      // User already exists — look them up
+      // User already exists - look them up
       const { data: { users }, error: listError } = await admin.auth.admin.listUsers()
       if (listError) {
         return NextResponse.json({ error: listError.message }, { status: 500 })

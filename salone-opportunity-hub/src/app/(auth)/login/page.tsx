@@ -27,6 +27,7 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -43,10 +44,14 @@ export default function LoginPage() {
     })
 
     if (error) {
-      setError(error.message === 'Invalid login credentials'
-        ? 'Incorrect email or password. Please try again.'
-        : error.message
-      )
+      console.error('Login error:', error.message, error.status)
+      if (error.message === 'Invalid login credentials') {
+        setError('Incorrect email or password. Please try again.')
+      } else if (error.message === 'Email not confirmed') {
+        setError('Your email is not confirmed. Please check your inbox for a confirmation link.')
+      } else {
+        setError(error.message)
+      }
       setIsLoading(false)
       return
     }
@@ -55,24 +60,53 @@ export default function LoginPage() {
     router.refresh()
   }
 
+  const [resetSent, setResetSent] = useState(false)
+
   async function handleForgotPassword() {
-    const email = (document.getElementById('email') as HTMLInputElement)?.value
-    if (!email) {
+    const email = getValues('email')
+    if (!email || !email.includes('@')) {
       setError('Please enter your email address first')
       return
     }
 
+    setIsLoading(true)
+    setError(null)
+
     const supabase = createClient()
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/callback?next=/profile`,
+      redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
     })
+
+    setIsLoading(false)
 
     if (error) {
       setError(error.message)
     } else {
-      setError(null)
-      alert('Password reset email sent! Please check your inbox.')
+      setResetSent(true)
     }
+  }
+
+  if (resetSent) {
+    return (
+      <Card className="w-full max-w-md shadow-lg">
+        <CardContent className="pt-6 text-center space-y-4">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
+            <span className="text-3xl">📧</span>
+          </div>
+          <h2 className="text-xl font-bold text-gray-900">Check your email</h2>
+          <p className="text-gray-600 text-sm">
+            We&apos;ve sent a password reset link to your email address. Click the link to set a new password.
+          </p>
+          <button
+            type="button"
+            onClick={() => setResetSent(false)}
+            className="text-blue-700 hover:text-blue-800 text-sm font-medium underline"
+          >
+            Back to login
+          </button>
+        </CardContent>
+      </Card>
+    )
   }
 
   return (

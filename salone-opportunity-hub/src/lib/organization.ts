@@ -23,7 +23,7 @@ export async function requireOrganization() {
     .single()
 
   if (!organization) {
-    // User exists but is not an organization — redirect to home
+    // User exists but is not an organization - redirect to home
     redirect('/')
   }
 

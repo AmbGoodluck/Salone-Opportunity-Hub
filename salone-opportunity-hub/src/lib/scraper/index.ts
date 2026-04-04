@@ -49,7 +49,7 @@ function checkSLEligibility(title: string, description: string): boolean {
   const text = `${title} ${description}`
   // If explicitly mentions Sierra Leone, definitely eligible
   if (/sierra leone/i.test(text)) return true
-  // If mentions "african", "west africa", "developing countries", "global", "international" — eligible
+  // If mentions "african", "west africa", "developing countries", "global", "international" - eligible
   if (/\b(africa|african|west africa|developing countr|global|international|worldwide|all countries)\b/i.test(text)) return true
   // Check for exclusive country restrictions
   for (const pattern of EXCLUSIVE_COUNTRY_PATTERNS) {
@@ -127,7 +127,7 @@ export class OpportunityScraper {
     const appKey = process.env.ADZUNA_APP_KEY
 
     if (!appId || !appKey) {
-      console.warn('Adzuna credentials not set — skipping')
+      console.warn('Adzuna credentials not set - skipping')
       return []
     }
 
