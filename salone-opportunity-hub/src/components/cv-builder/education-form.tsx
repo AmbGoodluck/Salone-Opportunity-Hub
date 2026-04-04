@@ -56,7 +56,7 @@ export function EducationForm({ data, onChange }: EducationFormProps) {
       {data.length === 0 ? (
         <div className="text-center py-8 text-gray-400 text-sm border-2 border-dashed rounded-xl">
           No education entries yet.{' '}
-          <button type="button" onClick={addEntry} className="text-emerald-600 underline">Add one</button>
+          <button type="button" onClick={addEntry} className="text-blue-700 underline">Add one</button>
         </div>
       ) : (
         <div className="space-y-4">

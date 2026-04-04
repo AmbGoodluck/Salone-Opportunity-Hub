@@ -280,7 +280,7 @@ export function EditOpportunityForm({ opportunity }: { opportunity: Opportunity 
           <div className="flex gap-3 pt-4">
             <Button
               type="submit"
-              className="bg-emerald-600 hover:bg-emerald-700"
+              className="bg-blue-700 hover:bg-blue-800"
               disabled={isLoading}
             >
               {isLoading ? 'Saving…' : 'Save Changes'}

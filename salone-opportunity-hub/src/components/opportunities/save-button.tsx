@@ -71,7 +71,7 @@ export function SaveButton({ opportunityId, isSaved: initialSaved, isLoggedIn, v
       disabled={isLoading}
       className={cn(
         'gap-2',
-        saved && 'text-emerald-600 border-emerald-200 hover:bg-emerald-50',
+        saved && 'text-blue-700 border-blue-200 hover:bg-blue-50',
         className
       )}
     >

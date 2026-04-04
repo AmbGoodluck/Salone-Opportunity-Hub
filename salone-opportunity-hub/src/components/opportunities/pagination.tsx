@@ -27,7 +27,7 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
   return (
     <div className="flex items-center justify-center gap-3 pt-4 text-sm">
       {currentPage > 1 && (
-        <button onClick={() => goToPage(currentPage - 1)} className="text-gray-500 hover:text-emerald-600">
+        <button onClick={() => goToPage(currentPage - 1)} className="text-gray-500 hover:text-blue-700">
           Previous
         </button>
       )}
@@ -37,15 +37,15 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
           onClick={() => goToPage(p)}
           className={
             p === currentPage
-              ? 'text-emerald-600 font-semibold'
-              : 'text-gray-500 hover:text-emerald-600'
+              ? 'text-blue-700 font-semibold'
+              : 'text-gray-500 hover:text-blue-700'
           }
         >
           {p}
         </button>
       ))}
       {currentPage < totalPages && (
-        <button onClick={() => goToPage(currentPage + 1)} className="text-gray-500 hover:text-emerald-600">
+        <button onClick={() => goToPage(currentPage + 1)} className="text-gray-500 hover:text-blue-700">
           Next
         </button>
       )}

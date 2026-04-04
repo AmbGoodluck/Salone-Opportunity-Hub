@@ -115,9 +115,9 @@ export function CVBuilderClient({ userId, cvId, initialData }: CVBuilderClientPr
               onClick={() => setActiveStep(step.id)}
               className={`flex-shrink-0 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
                 step.id === activeStep
-                  ? 'bg-emerald-600 text-white'
+                  ? 'bg-blue-700 text-white'
                   : idx < currentStepIndex
-                  ? 'bg-emerald-50 text-emerald-700'
+                  ? 'bg-blue-50 text-blue-800'
                   : 'bg-gray-100 text-gray-500'
               }`}
             >
@@ -184,7 +184,7 @@ export function CVBuilderClient({ userId, cvId, initialData }: CVBuilderClientPr
             {activeStep !== 'preview' ? (
               <Button
                 onClick={goNext}
-                className="bg-emerald-600 hover:bg-emerald-700"
+                className="bg-blue-700 hover:bg-blue-800"
               >
                 Next
               </Button>

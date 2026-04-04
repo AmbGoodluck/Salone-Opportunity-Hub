@@ -90,7 +90,7 @@ export default function SignupPage() {
     return (
       <Card className="w-full max-w-md shadow-lg">
         <CardContent className="pt-6 text-center space-y-4">
-          <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
             <span className="text-3xl">📧</span>
           </div>
           <h2 className="text-xl font-bold text-gray-900">Check your email</h2>
@@ -180,7 +180,7 @@ export default function SignupPage() {
 
           <Button
             type="submit"
-            className="w-full bg-emerald-600 hover:bg-emerald-700"
+            className="w-full bg-blue-700 hover:bg-blue-800"
             disabled={isLoading}
           >
             {isLoading ? 'Creating account…' : 'Create free account'}
@@ -195,7 +195,7 @@ export default function SignupPage() {
 
         <p className="mt-4 text-center text-sm text-gray-600">
           Already have an account?{' '}
-          <Link href="/login" className="text-emerald-600 hover:text-emerald-700 font-medium">
+          <Link href="/login" className="text-blue-700 hover:text-blue-800 font-medium">
             Sign in
           </Link>
         </p>

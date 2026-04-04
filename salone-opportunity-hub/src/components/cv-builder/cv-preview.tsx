@@ -20,7 +20,7 @@ function ProfessionalTemplate({ data }: { data: CVData }) {
   return (
     <div className="bg-white p-8 font-sans text-sm text-gray-800 min-h-[1000px] max-w-[800px] mx-auto">
       {/* Header */}
-      <div className="border-b-2 border-emerald-600 pb-4 mb-6">
+      <div className="border-b-2 border-blue-700 pb-4 mb-6">
         <h1 className="text-2xl font-bold text-gray-900">{p.full_name || 'Your Name'}</h1>
         <div className="flex flex-wrap gap-3 mt-1 text-xs text-gray-500">
           {p.email && <span>{p.email}</span>}
@@ -155,7 +155,7 @@ function ModernTemplate({ data }: { data: CVData }) {
       {/* Right column */}
       <div className="flex-1 p-6">
         {p.summary && (
-          <p className="text-xs text-gray-600 mb-5 leading-relaxed border-l-2 border-emerald-500 pl-3 italic">
+          <p className="text-xs text-gray-600 mb-5 leading-relaxed border-l-2 border-blue-600 pl-3 italic">
             {p.summary}
           </p>
         )}
@@ -168,7 +168,7 @@ function ModernTemplate({ data }: { data: CVData }) {
             {experience.map((e) => (
               <div key={e.id} className="mb-3">
                 <p className="font-semibold text-gray-900">{e.title}</p>
-                <p className="text-xs text-emerald-600">{e.company}</p>
+                <p className="text-xs text-blue-700">{e.company}</p>
                 <p className="text-xs text-gray-400">
                   {formatMonth(e.start_date)}
                   {e.is_current ? ' - Present' : e.end_date ? ` - ${formatMonth(e.end_date)}` : ''}
@@ -203,15 +203,15 @@ function CreativeTemplate({ data }: { data: CVData }) {
   return (
     <div className="bg-white font-sans text-sm min-h-[1000px] max-w-[800px] mx-auto">
       {/* Header */}
-      <div className="bg-gradient-to-r from-emerald-600 to-teal-500 text-white p-8">
+      <div className="bg-gradient-to-r from-blue-700 to-blue-600 text-white p-8">
         <h1 className="text-3xl font-bold">{p.full_name || 'Your Name'}</h1>
-        <div className="flex flex-wrap gap-4 mt-2 text-sm text-emerald-100">
+        <div className="flex flex-wrap gap-4 mt-2 text-sm text-blue-100">
           {p.email && <span>{p.email}</span>}
           {p.phone && <span>{p.phone}</span>}
           {p.location && <span>{p.location}</span>}
         </div>
         {p.summary && (
-          <p className="mt-4 text-sm text-emerald-50 leading-relaxed max-w-xl">{p.summary}</p>
+          <p className="mt-4 text-sm text-blue-50 leading-relaxed max-w-xl">{p.summary}</p>
         )}
       </div>
 
@@ -219,11 +219,11 @@ function CreativeTemplate({ data }: { data: CVData }) {
         <div className="col-span-3 space-y-5">
           {experience.length > 0 && (
             <div>
-              <h3 className="text-base font-bold text-emerald-700 mb-3">Experience</h3>
+              <h3 className="text-base font-bold text-blue-800 mb-3">Experience</h3>
               {experience.map((e) => (
-                <div key={e.id} className="mb-4 pl-3 border-l-2 border-emerald-200">
+                <div key={e.id} className="mb-4 pl-3 border-l-2 border-blue-200">
                   <p className="font-semibold text-gray-900">{e.title}</p>
-                  <p className="text-xs text-emerald-600 font-medium">{e.company}</p>
+                  <p className="text-xs text-blue-700 font-medium">{e.company}</p>
                   <p className="text-xs text-gray-400">
                     {formatMonth(e.start_date)} - {e.is_current ? 'Present' : formatMonth(e.end_date)}
                   </p>
@@ -235,9 +235,9 @@ function CreativeTemplate({ data }: { data: CVData }) {
 
           {education.length > 0 && (
             <div>
-              <h3 className="text-base font-bold text-emerald-700 mb-3">Education</h3>
+              <h3 className="text-base font-bold text-blue-800 mb-3">Education</h3>
               {education.map((e) => (
-                <div key={e.id} className="mb-3 pl-3 border-l-2 border-emerald-200">
+                <div key={e.id} className="mb-3 pl-3 border-l-2 border-blue-200">
                   <p className="font-semibold">{e.institution}</p>
                   <p className="text-xs text-gray-600">{e.degree} - {e.field}</p>
                 </div>
@@ -249,10 +249,10 @@ function CreativeTemplate({ data }: { data: CVData }) {
         <div className="col-span-2 space-y-5">
           {skills.length > 0 && (
             <div>
-              <h3 className="text-sm font-bold text-emerald-700 mb-2">Skills</h3>
+              <h3 className="text-sm font-bold text-blue-800 mb-2">Skills</h3>
               <div className="flex flex-wrap gap-1.5">
                 {skills.map((s) => (
-                  <span key={s} className="px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full text-xs border border-emerald-200">
+                  <span key={s} className="px-2 py-0.5 bg-blue-50 text-blue-800 rounded-full text-xs border border-blue-200">
                     {s}
                   </span>
                 ))}
@@ -262,7 +262,7 @@ function CreativeTemplate({ data }: { data: CVData }) {
 
           {languages.length > 0 && (
             <div>
-              <h3 className="text-sm font-bold text-emerald-700 mb-2">Languages</h3>
+              <h3 className="text-sm font-bold text-blue-800 mb-2">Languages</h3>
               {languages.map((l) => (
                 <div key={l.id} className="text-xs text-gray-700 mb-1">
                   <span className="font-medium">{l.language}</span> - {l.proficiency}
@@ -279,7 +279,7 @@ function CreativeTemplate({ data }: { data: CVData }) {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mb-5">
-      <h2 className="text-xs font-bold uppercase tracking-wider text-emerald-700 border-b border-emerald-200 pb-1 mb-3">
+      <h2 className="text-xs font-bold uppercase tracking-wider text-blue-800 border-b border-blue-200 pb-1 mb-3">
         {title}
       </h2>
       {children}

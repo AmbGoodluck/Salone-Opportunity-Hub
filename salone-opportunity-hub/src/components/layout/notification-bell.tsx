@@ -105,7 +105,7 @@ export function NotificationBell() {
               <button
                 type="button"
                 onClick={markAllRead}
-                className="text-xs text-emerald-600 hover:text-emerald-700 font-medium"
+                className="text-xs text-blue-700 hover:text-blue-800 font-medium"
               >
                 Mark all read
               </button>
@@ -123,7 +123,7 @@ export function NotificationBell() {
                   key={n.id}
                   className={cn(
                     'px-4 py-3 border-b border-gray-50 hover:bg-gray-50 transition-colors cursor-pointer',
-                    !n.is_read && 'bg-emerald-50/50'
+                    !n.is_read && 'bg-blue-50/50'
                   )}
                   onClick={() => {
                     if (!n.is_read) markRead(n.id)

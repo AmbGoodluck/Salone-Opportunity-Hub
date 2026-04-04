@@ -41,7 +41,7 @@ export default async function DashboardPage() {
           </p>
         </div>
         <Link href="/dashboard/post">
-          <Button className="bg-emerald-600 hover:bg-emerald-700">Post New Opportunity</Button>
+          <Button className="bg-blue-700 hover:bg-blue-800">Post New Opportunity</Button>
         </Link>
       </div>
 
@@ -51,7 +51,7 @@ export default async function DashboardPage() {
           <h2 className="text-lg font-semibold text-gray-900 mb-1">No opportunities yet</h2>
           <p className="text-sm text-gray-500 mb-4">Post your first opportunity to get started.</p>
           <Link href="/dashboard/post">
-            <Button className="bg-emerald-600 hover:bg-emerald-700">Post Opportunity</Button>
+            <Button className="bg-blue-700 hover:bg-blue-800">Post Opportunity</Button>
           </Link>
         </div>
       ) : (
@@ -80,7 +80,7 @@ export default async function DashboardPage() {
                       variant="outline"
                       className={
                         opp.status === 'Active'
-                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          ? 'bg-blue-50 text-blue-800 border-blue-200'
                           : 'bg-red-50 text-red-700 border-red-200'
                       }
                     >
@@ -93,7 +93,7 @@ export default async function DashboardPage() {
                   <td className="px-4 py-3 text-right space-x-2">
                     <Link
                       href={`/dashboard/edit/${opp.id}`}
-                      className="text-emerald-600 hover:text-emerald-700 text-xs font-medium"
+                      className="text-blue-700 hover:text-blue-800 text-xs font-medium"
                     >
                       Edit
                     </Link>

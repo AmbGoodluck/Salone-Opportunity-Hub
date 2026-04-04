@@ -65,7 +65,7 @@ export function DownloadButtons({ data, compact = false }: DownloadButtonsProps)
         >
           {({ loading }) => (
             <Button
-              className="w-full bg-emerald-600 hover:bg-emerald-700 gap-2"
+              className="w-full bg-blue-700 hover:bg-blue-800 gap-2"
               disabled={loading}
             >
               <Download className="h-4 w-4" />

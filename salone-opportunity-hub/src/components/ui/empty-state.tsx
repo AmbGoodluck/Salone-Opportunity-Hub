@@ -20,10 +20,10 @@ export function EmptyState({ icon = '🔍', title, description, actionLabel, act
       {actionLabel && (
         actionHref ? (
           <Link href={actionHref}>
-            <Button className="bg-emerald-600 hover:bg-emerald-700">{actionLabel}</Button>
+            <Button className="bg-blue-700 hover:bg-blue-800">{actionLabel}</Button>
           </Link>
         ) : (
-          <Button onClick={onAction} className="bg-emerald-600 hover:bg-emerald-700">{actionLabel}</Button>
+          <Button onClick={onAction} className="bg-blue-700 hover:bg-blue-800">{actionLabel}</Button>
         )
       )}
     </div>

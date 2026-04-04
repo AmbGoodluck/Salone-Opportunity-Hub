@@ -24,7 +24,7 @@ export function LocalFilter() {
       onClick={toggle}
       className={`flex items-center gap-1.5 px-3 h-8 rounded-lg text-xs font-medium whitespace-nowrap border transition-colors ${
         isActive
-          ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
+          ? 'bg-blue-50 text-blue-800 border-blue-300'
           : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
       }`}
     >

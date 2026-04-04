@@ -76,7 +76,7 @@ export function SkillsInput({ skills, onChange }: SkillsInputProps) {
               <button
                 key={s}
                 onClick={() => addSkill(s)}
-                className="px-2 py-1 text-xs bg-gray-100 hover:bg-emerald-50 hover:text-emerald-700 rounded-full border border-gray-200 transition-colors"
+                className="px-2 py-1 text-xs bg-gray-100 hover:bg-blue-50 hover:text-blue-800 rounded-full border border-gray-200 transition-colors"
               >
                 + {s}
               </button>
@@ -93,12 +93,12 @@ export function SkillsInput({ skills, onChange }: SkillsInputProps) {
             {skills.map((skill) => (
               <span
                 key={skill}
-                className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-50 text-emerald-700 text-sm rounded-full border border-emerald-200"
+                className="inline-flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-800 text-sm rounded-full border border-blue-200"
               >
                 {skill}
                 <button
                   onClick={() => removeSkill(skill)}
-                  className="hover:text-emerald-900 transition-colors"
+                  className="hover:text-blue-900 transition-colors"
                   aria-label={`Remove ${skill}`}
                 >
                   <X className="h-3 w-3" />

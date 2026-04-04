@@ -52,7 +52,7 @@ export function OpportunitySearch({ defaultValue = '' }: OpportunitySearchProps)
         </button>
       )}
       {isPending && (
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin rounded-full border-2 border-emerald-600 border-t-transparent" />
+        <div className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin rounded-full border-2 border-blue-700 border-t-transparent" />
       )}
     </div>
   )

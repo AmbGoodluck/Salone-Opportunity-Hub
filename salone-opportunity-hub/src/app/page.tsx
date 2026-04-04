@@ -5,7 +5,7 @@ import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { MobileNav } from '@/components/layout/mobile-nav'
 import { Button } from '@/components/ui/button'
-import { Users, Briefcase, GraduationCap, Globe, Award, BookOpen } from 'lucide-react'
+import { Globe, Award, BookOpen } from 'lucide-react'
 
 export default async function HomePage() {
   const supabase = await createClient()
@@ -96,89 +96,47 @@ export default async function HomePage() {
 
         {/* Feature cards */}
         <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10 pb-16">
+          <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">
+            Everything you need to succeed
+          </h2>
+
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {[
               {
-                icon: Users,
-                title: 'Networking',
-                desc: 'Connect with Sierra Leonean professionals, mentors, and peers pursuing global opportunities.',
+                icon: Globe,
+                title: 'Discover Opportunities',
+                desc: 'Filter by type, deadline, category, and more to find scholarships, jobs, internships, and grants matching your goals.',
                 color: 'text-blue-600',
                 bg: 'bg-blue-50',
+                href: '/opportunities',
               },
               {
-                icon: Briefcase,
-                title: 'Business Support',
-                desc: 'Access job listings, grants, and resources to grow your career or start a business in Sierra Leone.',
+                icon: BookOpen,
+                title: 'Save & Track',
+                desc: 'Bookmark opportunities you love, update your application status, and add personal notes to stay organized.',
                 color: 'text-blue-700',
                 bg: 'bg-blue-50',
+                href: user ? '/saved' : '/signup',
               },
               {
-                icon: GraduationCap,
-                title: 'Training & Resources',
-                desc: 'Build your CV, discover scholarships, and access tools designed to help you succeed.',
+                icon: Award,
+                title: 'Build Your CV / Resume',
+                desc: 'Create a professional CV using our templates and download as PDF or Word — ready to submit with your applications.',
                 color: 'text-blue-600',
                 bg: 'bg-blue-50',
+                href: user ? '/cv-builder' : '/signup',
               },
             ].map((card) => (
-              <div
-                key={card.title}
-                className="bg-white rounded-xl border border-gray-200 p-6 sm:p-8 shadow-sm hover:shadow-md transition-shadow text-center"
-              >
-                <div className={`inline-flex items-center justify-center w-14 h-14 rounded-full ${card.bg} mb-4`}>
-                  <card.icon className={`w-7 h-7 ${card.color}`} />
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">{card.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{card.desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Additional features */}
-        <section className="bg-white py-16">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-gray-900 text-center mb-10">
-              Everything you need to succeed
-            </h2>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[
-                {
-                  icon: Globe,
-                  title: 'Discover Opportunities',
-                  desc: 'Filter by type, deadline, and category to find the right fit.',
-                  href: '/opportunities',
-                },
-                {
-                  icon: BookOpen,
-                  title: 'Save & Track',
-                  desc: 'Bookmark opportunities, update status, and add notes.',
-                  href: user ? '/saved' : '/signup',
-                },
-                {
-                  icon: Award,
-                  title: 'Build Your CV',
-                  desc: 'Create a professional CV and download as PDF or Word.',
-                  href: user ? '/cv-builder' : '/signup',
-                },
-                {
-                  icon: Users,
-                  title: 'Mobile Friendly',
-                  desc: 'Fast, lightweight, and accessible on any device.',
-                  href: '/opportunities',
-                },
-              ].map((feature) => (
-                <Link key={feature.title} href={feature.href}>
-                  <div className="bg-gray-50 rounded-xl border border-gray-100 p-5 hover:shadow-md hover:border-blue-200 transition-all h-full text-center">
-                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-50 mb-3">
-                      <feature.icon className="w-6 h-6 text-blue-600" />
-                    </div>
-                    <h3 className="font-semibold text-gray-900 mb-1">{feature.title}</h3>
-                    <p className="text-sm text-gray-500 leading-relaxed">{feature.desc}</p>
+              <Link key={card.title} href={card.href}>
+                <div className="bg-white rounded-xl border border-gray-200 p-6 sm:p-8 shadow-sm hover:shadow-md transition-shadow text-center h-full">
+                  <div className={`inline-flex items-center justify-center w-14 h-14 rounded-full ${card.bg} mb-4`}>
+                    <card.icon className={`w-7 h-7 ${card.color}`} />
                   </div>
-                </Link>
-              ))}
-            </div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{card.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{card.desc}</p>
+                </div>
+              </Link>
+            ))}
           </div>
         </section>
 

@@ -110,7 +110,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={handleForgotPassword}
-                className="text-xs text-emerald-600 hover:text-emerald-700 underline"
+                className="text-xs text-blue-700 hover:text-blue-800 underline"
               >
                 Forgot password?
               </button>
@@ -130,7 +130,7 @@ export default function LoginPage() {
 
           <Button
             type="submit"
-            className="w-full bg-emerald-600 hover:bg-emerald-700"
+            className="w-full bg-blue-700 hover:bg-blue-800"
             disabled={isLoading}
           >
             {isLoading ? 'Signing in…' : 'Sign in'}
@@ -139,7 +139,7 @@ export default function LoginPage() {
 
         <p className="mt-6 text-center text-sm text-gray-600">
           Don&apos;t have an account?{' '}
-          <Link href="/signup" className="text-emerald-600 hover:text-emerald-700 font-medium">
+          <Link href="/signup" className="text-blue-700 hover:text-blue-800 font-medium">
             Create one free
           </Link>
         </p>

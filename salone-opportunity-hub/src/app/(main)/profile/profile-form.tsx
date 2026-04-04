@@ -342,13 +342,13 @@ export function ProfileForm({ userId, email, initialProfile }: ProfileFormProps)
                 {skills.map((skill) => (
                   <div
                     key={skill}
-                    className="flex items-center gap-2 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-sm border border-emerald-200"
+                    className="flex items-center gap-2 bg-blue-50 text-blue-800 px-3 py-1 rounded-full text-sm border border-blue-200"
                   >
                     <span>{skill}</span>
                     <button
                       type="button"
                       onClick={() => setSkills(skills.filter((s) => s !== skill))}
-                      className="text-emerald-600 hover:text-emerald-800 font-bold"
+                      className="text-blue-700 hover:text-blue-900 font-bold"
                     >
                       ✕
                     </button>
@@ -399,7 +399,7 @@ export function ProfileForm({ userId, email, initialProfile }: ProfileFormProps)
       <Button
         type="submit"
         disabled={isSaving}
-        className="w-full bg-emerald-600 hover:bg-emerald-700"
+        className="w-full bg-blue-700 hover:bg-blue-800"
       >
         {isSaving ? 'Saving...' : 'Save Profile'}
       </Button>

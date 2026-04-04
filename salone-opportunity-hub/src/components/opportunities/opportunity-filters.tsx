@@ -88,14 +88,14 @@ export function OpportunityFilters({ activeFilterCount = 0 }: { activeFilterCoun
         onClick={() => setOpen((v) => !v)}
         className={`flex items-center gap-2 px-3 py-2 text-sm border rounded-lg transition-colors ${
           open
-            ? 'bg-emerald-50 border-emerald-300 text-emerald-700'
+            ? 'bg-blue-50 border-blue-300 text-blue-800'
             : 'border-gray-200 hover:bg-gray-50 text-gray-700'
         }`}
       >
         <SlidersHorizontal className="h-4 w-4" />
         <span>Filters</span>
         {activeFilterCount > 0 && (
-          <span className="ml-1 h-5 w-5 rounded-full bg-emerald-600 text-white text-xs flex items-center justify-center font-medium">
+          <span className="ml-1 h-5 w-5 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center font-medium">
             {activeFilterCount}
           </span>
         )}

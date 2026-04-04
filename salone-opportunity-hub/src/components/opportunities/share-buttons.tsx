@@ -62,7 +62,7 @@ export function ShareButtons({ title }: ShareButtonsProps) {
         className="flex items-center justify-center w-9 h-9 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
         aria-label="Copy link"
       >
-        {copied ? <Check className="h-4 w-4 text-emerald-600" /> : <Link2 className="h-4 w-4" />}
+        {copied ? <Check className="h-4 w-4 text-blue-700" /> : <Link2 className="h-4 w-4" />}
       </button>
     </div>
   )

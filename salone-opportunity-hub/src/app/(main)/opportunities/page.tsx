@@ -311,7 +311,7 @@ export default async function OpportunitiesPage({
       {/* Category Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
         <div className="bg-white rounded-lg border border-gray-200 p-4 text-center hover:shadow-md transition-shadow">
-          <div className="text-2xl font-bold text-emerald-600">{totalCount ?? 0}</div>
+          <div className="text-2xl font-bold text-blue-700">{totalCount ?? 0}</div>
           <div className="text-xs text-gray-600 mt-1">Total</div>
         </div>
         <div className="bg-blue-50 rounded-lg border border-blue-200 p-4 text-center hover:shadow-md transition-shadow">
@@ -322,9 +322,9 @@ export default async function OpportunitiesPage({
           <div className="text-2xl font-bold text-purple-700">{internshipCount ?? 0}</div>
           <div className="text-xs text-purple-700 mt-1">Internships</div>
         </div>
-        <div className="bg-emerald-50 rounded-lg border border-emerald-200 p-4 text-center hover:shadow-md transition-shadow">
-          <div className="text-2xl font-bold text-emerald-700">{scholarshipCount ?? 0}</div>
-          <div className="text-xs text-emerald-700 mt-1">Scholarships</div>
+        <div className="bg-blue-50 rounded-lg border border-blue-200 p-4 text-center hover:shadow-md transition-shadow">
+          <div className="text-2xl font-bold text-blue-800">{scholarshipCount ?? 0}</div>
+          <div className="text-xs text-blue-800 mt-1">Scholarships</div>
         </div>
         <div className="bg-amber-50 rounded-lg border border-amber-200 p-4 text-center hover:shadow-md transition-shadow">
           <div className="text-2xl font-bold text-amber-700">{eventCount ?? 0}</div>

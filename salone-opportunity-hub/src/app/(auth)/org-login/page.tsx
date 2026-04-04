@@ -122,7 +122,7 @@ export default function OrgLoginPage() {
 
           <Button
             type="submit"
-            className="w-full bg-emerald-600 hover:bg-emerald-700"
+            className="w-full bg-blue-700 hover:bg-blue-800"
             disabled={isLoading}
           >
             {isLoading ? 'Signing in…' : 'Sign in'}
@@ -131,13 +131,13 @@ export default function OrgLoginPage() {
 
         <p className="mt-6 text-center text-sm text-gray-600">
           Don&apos;t have an organization account?{' '}
-          <Link href="/org-signup" className="text-emerald-600 hover:text-emerald-700 font-medium">
+          <Link href="/org-signup" className="text-blue-700 hover:text-blue-800 font-medium">
             Register your organization
           </Link>
         </p>
         <p className="mt-2 text-center text-sm text-gray-500">
           Looking for opportunities?{' '}
-          <Link href="/login" className="text-emerald-600 hover:text-emerald-700 font-medium">
+          <Link href="/login" className="text-blue-700 hover:text-blue-800 font-medium">
             Sign in as a user
           </Link>
         </p>

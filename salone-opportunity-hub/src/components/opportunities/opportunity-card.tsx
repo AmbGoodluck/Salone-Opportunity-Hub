@@ -148,7 +148,7 @@ export function OpportunityCard({
 
         {/* SL Eligible tag + Match Score */}
         <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="inline-flex items-center gap-1 text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full px-2 py-0.5">
+          <span className="inline-flex items-center gap-1 text-xs font-medium bg-blue-50 text-blue-800 border border-blue-200 rounded-full px-2 py-0.5">
             🇸🇱 Sierra Leoneans Can Apply
           </span>
           {matchData && (
@@ -172,7 +172,7 @@ export function OpportunityCard({
         {/* Title - larger and more prominent */}
         <div className="flex-1">
           <Link href={`/opportunities/${opportunity.id}`}>
-            <h3 className="font-bold text-lg leading-tight line-clamp-3 text-gray-900 group-hover:text-emerald-700 transition-colors mb-2">
+            <h3 className="font-bold text-lg leading-tight line-clamp-3 text-gray-900 group-hover:text-blue-800 transition-colors mb-2">
               {opportunity.title}
             </h3>
           </Link>
@@ -199,7 +199,7 @@ export function OpportunityCard({
         <div className="flex gap-2 pt-2 mt-auto">
           <Link href={`/opportunities/${opportunity.id}`} className="flex-1">
             <Button
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold h-10 rounded-lg transition-colors"
+              className="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold h-10 rounded-lg transition-colors"
             >
               View &amp; Apply
             </Button>

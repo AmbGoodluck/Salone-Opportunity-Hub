@@ -97,7 +97,7 @@ export default async function OpportunityDetailPage({ params }: Props) {
               </Badge>
               <DeadlineBadge deadline={opportunity.deadline} />
               {opportunity.is_verified && (
-                <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 text-xs">
+                <Badge className="bg-blue-100 text-blue-800 border-blue-200 text-xs">
                   Verified
                 </Badge>
               )}
@@ -140,7 +140,7 @@ export default async function OpportunityDetailPage({ params }: Props) {
           {/* Mobile CTA */}
           <div className="lg:hidden fixed bottom-16 left-0 right-0 p-4 bg-white border-t border-gray-200 flex gap-3">
             <a href={opportunity.application_link} target="_blank" rel="noopener noreferrer" className="flex-1">
-              <Button className="w-full bg-emerald-600 hover:bg-emerald-700 gap-2">
+              <Button className="w-full bg-blue-700 hover:bg-blue-800 gap-2">
                 Apply Now
                 <ExternalLink className="h-4 w-4" />
               </Button>
@@ -159,7 +159,7 @@ export default async function OpportunityDetailPage({ params }: Props) {
           <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-4 sticky top-24">
             {/* Apply button (desktop) */}
             <a href={opportunity.application_link} target="_blank" rel="noopener noreferrer" className="block">
-              <Button className="w-full bg-emerald-600 hover:bg-emerald-700 gap-2 text-base h-11">
+              <Button className="w-full bg-blue-700 hover:bg-blue-800 gap-2 text-base h-11">
                 Apply Now
                 <ExternalLink className="h-4 w-4" />
               </Button>

@@ -155,7 +155,7 @@ function SavedItem({
             <DeadlineBadge deadline={opp.deadline} />
           </div>
           <Link href={`/opportunities/${opp.id}`}>
-            <h3 className="font-semibold text-gray-900 hover:text-emerald-700 transition-colors line-clamp-2">
+            <h3 className="font-semibold text-gray-900 hover:text-blue-800 transition-colors line-clamp-2">
               {opp.title}
             </h3>
           </Link>
@@ -173,7 +173,7 @@ function SavedItem({
             href={opp.application_link}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-1.5 text-gray-400 hover:text-emerald-600 transition-colors"
+            className="p-1.5 text-gray-400 hover:text-blue-700 transition-colors"
             aria-label="Open application"
           >
             <ExternalLink className="h-4 w-4" />
@@ -219,7 +219,7 @@ function SavedItem({
               size="sm"
               onClick={saveNotes}
               disabled={isSavingNotes}
-              className="h-8 px-3 text-xs bg-emerald-600 hover:bg-emerald-700 flex-shrink-0"
+              className="h-8 px-3 text-xs bg-blue-700 hover:bg-blue-800 flex-shrink-0"
             >
               Save
             </Button>
