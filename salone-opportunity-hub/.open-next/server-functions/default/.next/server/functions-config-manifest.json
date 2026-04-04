@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "functions": {
+    "/api/cron/scrape": {},
+    "/api/scrape": {
+      "maxDuration": 60
+    }
+  }
+}
