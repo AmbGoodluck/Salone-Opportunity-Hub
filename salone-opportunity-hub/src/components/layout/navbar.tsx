@@ -47,7 +47,7 @@ export function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -59,7 +59,10 @@ export function Navbar() {
               height={36}
               className="rounded-full"
             />
-            <span className="font-bold text-gray-900 hidden sm:block">Salone Opp Hub</span>
+            <div className="hidden sm:block leading-tight">
+              <span className="font-bold text-blue-800 text-sm block">SALONE</span>
+              <span className="text-[10px] text-gray-500 font-medium tracking-wide">OPPORTUNITY HUB</span>
+            </div>
           </Link>
 
           {/* Desktop navigation */}
@@ -73,7 +76,7 @@ export function Navbar() {
                   className={cn(
                     'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
                     pathname.startsWith(link.href)
-                      ? 'bg-emerald-50 text-emerald-700'
+                      ? 'bg-blue-50 text-blue-700'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                   )}
                 >
@@ -98,7 +101,7 @@ export function Navbar() {
                 <DropdownMenu>
                 <DropdownMenuTrigger>
                   <div className="flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-gray-100 cursor-pointer">
-                    <div className="w-7 h-7 bg-emerald-600 rounded-full flex items-center justify-center">
+                    <div className="w-7 h-7 bg-blue-700 rounded-full flex items-center justify-center">
                       <span className="text-white text-xs font-medium">
                         {user.email?.[0].toUpperCase()}
                       </span>
@@ -136,11 +139,8 @@ export function Navbar() {
                 <Link href="/login">
                   <Button variant="ghost" size="sm">Sign in</Button>
                 </Link>
-                <Link href="/signup">
-                  <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700">Sign up</Button>
-                </Link>
-                <Link href="/org-login">
-                  <Button variant="ghost" size="sm">Organizations</Button>
+                <Link href="/opportunities">
+                  <Button size="sm" className="bg-blue-700 hover:bg-blue-800 text-white font-semibold">Browse Opportunities</Button>
                 </Link>
               </div>
             )}
@@ -170,7 +170,7 @@ export function Navbar() {
                 className={cn(
                   'block px-4 py-2 rounded-lg text-sm font-medium',
                   pathname.startsWith(link.href)
-                    ? 'bg-emerald-50 text-emerald-700'
+                    ? 'bg-blue-50 text-blue-700'
                     : 'text-gray-600'
                 )}
               >
@@ -183,8 +183,8 @@ export function Navbar() {
               <Link href="/login" className="flex-1" onClick={() => setMobileOpen(false)}>
                 <Button variant="outline" size="sm" className="w-full">Sign in</Button>
               </Link>
-              <Link href="/signup" className="flex-1" onClick={() => setMobileOpen(false)}>
-                <Button size="sm" className="w-full bg-emerald-600 hover:bg-emerald-700">Sign up</Button>
+              <Link href="/opportunities" className="flex-1" onClick={() => setMobileOpen(false)}>
+                <Button size="sm" className="w-full bg-blue-700 hover:bg-blue-800">Browse Opportunities</Button>
               </Link>
             </div>
           )}
