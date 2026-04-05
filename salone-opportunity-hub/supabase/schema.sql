@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   id UUID REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,
   full_name TEXT,
   email TEXT UNIQUE NOT NULL,
+  avatar_url TEXT,
   location TEXT,
   education_level TEXT,
   interests TEXT[],

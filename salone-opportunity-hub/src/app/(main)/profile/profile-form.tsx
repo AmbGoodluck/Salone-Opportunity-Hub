@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { Camera } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -54,7 +55,10 @@ interface ProfileFormProps {
 
 export function ProfileForm({ userId, email, initialProfile }: ProfileFormProps) {
   const router = useRouter()
+  const avatarInputRef = useRef<HTMLInputElement>(null)
   const [isSaving, setIsSaving] = useState(false)
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false)
+  const [avatarUrl, setAvatarUrl] = useState(initialProfile?.avatar_url || '')
   const [preferredTypes, setPreferredTypes] = useState<string[]>(
     (initialProfile?.preferred_types as string[]) ?? []
   )
@@ -99,6 +103,26 @@ export function ProfileForm({ userId, email, initialProfile }: ProfileFormProps)
     setPreferredCategories((prev) =>
       prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
     )
+  }
+
+  async function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setIsUploadingAvatar(true)
+    const formData = new FormData()
+    formData.append('avatar', file)
+    try {
+      const res = await fetch('/api/profile/avatar', { method: 'POST', body: formData })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error)
+      setAvatarUrl(data.avatar_url)
+      toast.success('Profile picture updated!')
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Upload failed')
+    } finally {
+      setIsUploadingAvatar(false)
+      if (avatarInputRef.current) avatarInputRef.current.value = ''
+    }
   }
 
   async function onSubmit(data: ProfileFormData) {
@@ -155,6 +179,35 @@ export function ProfileForm({ userId, email, initialProfile }: ProfileFormProps)
           <CardTitle className="text-base">Personal Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          {/* Profile Picture */}
+          <div className="flex items-center gap-4">
+            <div className="relative group">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="Profile" className="w-20 h-20 rounded-full object-cover border-2 border-gray-200" />
+              ) : (
+                <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-2xl border-2 border-gray-200">
+                  {(initialProfile?.full_name || email).charAt(0).toUpperCase()}
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={() => avatarInputRef.current?.click()}
+                disabled={isUploadingAvatar}
+                className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+              >
+                <Camera className="h-5 w-5 text-white" />
+              </button>
+              <input ref={avatarInputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={handleAvatarUpload} className="hidden" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-700">Profile Picture</p>
+              <p className="text-xs text-gray-400">JPEG, PNG, or WebP. Max 2MB.</p>
+              {isUploadingAvatar && <p className="text-xs text-blue-600 mt-1">Uploading...</p>}
+            </div>
+          </div>
+
+          <Separator />
+
           <div className="space-y-2">
             <Label htmlFor="email">Email address</Label>
             <Input id="email" value={email} disabled className="bg-gray-50" />

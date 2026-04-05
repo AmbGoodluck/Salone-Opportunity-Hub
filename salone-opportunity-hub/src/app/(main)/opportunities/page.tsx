@@ -218,14 +218,6 @@ async function OpportunitiesGrid({ searchParams }: { searchParams: SearchParams 
         {page > 1 && ` - Page ${page} of ${totalPages}`}
       </p>
 
-      <div className="bg-amber-50 border border-amber-300 rounded-lg px-4 py-3 text-sm">
-        <p className="font-semibold text-amber-800">⚠️ Fraud Alert</p>
-        <p className="text-amber-700 mt-1">
-          Do NOT send money to anyone claiming to offer opportunities. All legitimate opportunities listed here are free to apply. If someone asks you for payment, report it immediately.
-        </p>
-        <p className="text-amber-600 mt-1 text-xs italic">- Sheku Foryoh, CEO</p>
-      </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {(sortedOpportunities as Opportunity[]).map((opp) => (
           <OpportunityCard
