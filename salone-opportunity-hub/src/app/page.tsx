@@ -138,6 +138,10 @@ export default async function HomePage() {
               </Link>
             ))}
           </div>
+
+          <p className="text-center text-sm text-gray-500 mt-8">
+            Registered under the National Youth Commission of Sierra Leone
+          </p>
         </section>
 
         {/* CTA */}
