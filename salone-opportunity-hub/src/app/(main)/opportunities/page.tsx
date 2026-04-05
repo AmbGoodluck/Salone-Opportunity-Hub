@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { SlidersHorizontal } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { OpportunityCard } from '@/components/opportunities/opportunity-card'
@@ -309,32 +310,40 @@ export default async function OpportunitiesPage({
       </div>
 
       {/* Category Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
-        <div className="bg-white rounded-lg border border-gray-200 p-4 text-center hover:shadow-md transition-shadow">
-          <div className="text-2xl font-bold text-blue-700">{totalCount ?? 0}</div>
-          <div className="text-xs text-gray-600 mt-1">Total</div>
-        </div>
-        <div className="bg-blue-50 rounded-lg border border-blue-200 p-4 text-center hover:shadow-md transition-shadow">
-          <div className="text-2xl font-bold text-blue-700">{jobCount ?? 0}</div>
-          <div className="text-xs text-blue-700 mt-1">Jobs</div>
-        </div>
-        <div className="bg-purple-50 rounded-lg border border-purple-200 p-4 text-center hover:shadow-md transition-shadow">
-          <div className="text-2xl font-bold text-purple-700">{internshipCount ?? 0}</div>
-          <div className="text-xs text-purple-700 mt-1">Internships</div>
-        </div>
-        <div className="bg-blue-50 rounded-lg border border-blue-200 p-4 text-center hover:shadow-md transition-shadow">
-          <div className="text-2xl font-bold text-blue-800">{scholarshipCount ?? 0}</div>
-          <div className="text-xs text-blue-800 mt-1">Scholarships</div>
-        </div>
-        <div className="bg-amber-50 rounded-lg border border-amber-200 p-4 text-center hover:shadow-md transition-shadow">
-          <div className="text-2xl font-bold text-amber-700">{eventCount ?? 0}</div>
-          <div className="text-xs text-amber-700 mt-1">Events</div>
-        </div>
-        <div className="bg-rose-50 rounded-lg border border-rose-200 p-4 text-center hover:shadow-md transition-shadow">
-          <div className="text-2xl font-bold text-rose-700">{grantCount ?? 0}</div>
-          <div className="text-xs text-rose-700 mt-1">Grants</div>
-        </div>
-      </div>
+      {(() => {
+        const activeType = Array.isArray(params.type) ? params.type : params.type ? [params.type] : []
+        const isAllActive = activeType.length === 0
+        const stats = [
+          { label: 'Total', count: totalCount ?? 0, type: null, color: 'text-blue-700', bg: 'bg-white', border: 'border-gray-200', activeBg: 'bg-blue-100', activeBorder: 'border-blue-500' },
+          { label: 'Jobs', count: jobCount ?? 0, type: 'job', color: 'text-blue-700', bg: 'bg-blue-50', border: 'border-blue-200', activeBg: 'bg-blue-200', activeBorder: 'border-blue-500' },
+          { label: 'Internships', count: internshipCount ?? 0, type: 'internship', color: 'text-purple-700', bg: 'bg-purple-50', border: 'border-purple-200', activeBg: 'bg-purple-200', activeBorder: 'border-purple-500' },
+          { label: 'Scholarships', count: scholarshipCount ?? 0, type: 'scholarship', color: 'text-blue-800', bg: 'bg-blue-50', border: 'border-blue-200', activeBg: 'bg-blue-200', activeBorder: 'border-blue-600' },
+          { label: 'Events', count: eventCount ?? 0, type: 'event', color: 'text-amber-700', bg: 'bg-amber-50', border: 'border-amber-200', activeBg: 'bg-amber-200', activeBorder: 'border-amber-500' },
+          { label: 'Grants', count: grantCount ?? 0, type: 'grant', color: 'text-rose-700', bg: 'bg-rose-50', border: 'border-rose-200', activeBg: 'bg-rose-200', activeBorder: 'border-rose-500' },
+        ]
+        return (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
+            {stats.map((s) => {
+              const isActive = s.type === null ? isAllActive : activeType.includes(s.type)
+              const href = s.type === null ? '/opportunities' : `/opportunities?type=${s.type}`
+              return (
+                <Link
+                  key={s.label}
+                  href={href}
+                  className={`rounded-lg border-2 p-4 text-center transition-all ${
+                    isActive
+                      ? `${s.activeBg} ${s.activeBorder} shadow-md ring-1 ring-offset-1 ring-current/10`
+                      : `${s.bg} ${s.border} hover:shadow-md`
+                  }`}
+                >
+                  <div className={`text-2xl font-bold ${s.color}`}>{s.count}</div>
+                  <div className={`text-xs ${s.color} mt-1`}>{s.label}</div>
+                </Link>
+              )
+            })}
+          </div>
+        )
+      })()}
 
       {/* Search + Filter + Sort bar */}
       <div className="flex items-center gap-3 mb-6">
