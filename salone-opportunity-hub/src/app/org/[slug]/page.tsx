@@ -41,6 +41,9 @@ export default async function PublicOrgProfilePage({ params }: Props) {
 
   if (!org) notFound()
 
+  // If profile is not public, return 404
+  if (org.is_public === false) notFound()
+
   // Fetch open opportunities (not expired)
   const { data: opportunities } = await supabase
     .from('opportunities')

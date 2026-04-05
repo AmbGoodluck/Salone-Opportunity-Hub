@@ -21,6 +21,7 @@ export default async function OrganizationsDirectoryPage({
   let query = supabase
     .from('organizations')
     .select('id, name, slug, logo_url, tagline, location')
+    .neq('is_public', false)
     .order('name', { ascending: true })
 
   if (q) {

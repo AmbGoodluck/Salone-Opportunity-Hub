@@ -4,6 +4,7 @@ import { requireOrganization, isProfileComplete, getMissingProfileFields } from 
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { CopyLinkButton } from '@/components/dashboard/copy-link-button'
+import { VisibilityToggle } from '@/components/dashboard/visibility-toggle'
 
 export const metadata: Metadata = {
   title: 'Organization Dashboard | Salone Opportunity Hub',
@@ -102,6 +103,11 @@ export default async function DashboardPage() {
             </Button>
           </Link>
         </div>
+      </div>
+
+      {/* ── Profile Visibility ── */}
+      <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <VisibilityToggle initialValue={organization.is_public ?? true} />
       </div>
 
       {/* ── Stats Cards ── */}

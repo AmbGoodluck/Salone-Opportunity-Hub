@@ -13,6 +13,7 @@ ALTER TABLE organizations ADD COLUMN IF NOT EXISTS website TEXT;
 ALTER TABLE organizations ADD COLUMN IF NOT EXISTS location TEXT;
 ALTER TABLE organizations ADD COLUMN IF NOT EXISTS phone TEXT;
 ALTER TABLE organizations ADD COLUMN IF NOT EXISTS gallery_urls TEXT[] DEFAULT '{}';
+ALTER TABLE organizations ADD COLUMN IF NOT EXISTS is_public BOOLEAN DEFAULT true;
 
 -- Index for slug lookups (public profile pages)
 CREATE INDEX IF NOT EXISTS idx_organizations_slug ON organizations(slug);

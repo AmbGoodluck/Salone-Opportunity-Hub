@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS organizations (
   location TEXT,
   phone TEXT,
   gallery_urls TEXT[] DEFAULT '{}',
+  is_public BOOLEAN DEFAULT true,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
