@@ -274,88 +274,18 @@ export default async function OpportunitiesPage({
 }: {
   searchParams: Promise<SearchParams>
 }) {
-  const params = await searchParams
-  const activeFilterCount =
-    (Array.isArray(params.type) ? params.type.length : params.type ? 1 : 0) +
-    (Array.isArray(params.category) ? params.category.length : params.category ? 1 : 0) +
-    (Array.isArray(params.study_level) ? params.study_level.length : params.study_level ? 1 : 0) +
-    (Array.isArray(params.region) ? params.region.length : params.region ? 1 : 0) +
-    (params.deadline ? 1 : 0)
-
-  // Fetch opportunity counts for stats
-  const supabase = await createClient()
-  const [{count: totalCount}, {count: jobCount}, {count: internshipCount}, {count: scholarshipCount}, {count: eventCount}, {count: grantCount}] = await Promise.all([
-    supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('sl_eligible', true),
-    supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'job').eq('sl_eligible', true),
-    supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'internship').eq('sl_eligible', true),
-    supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'scholarship').eq('sl_eligible', true),
-    supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'event').eq('sl_eligible', true),
-    supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'grant').eq('sl_eligible', true),
-  ])
-
+  // Disable all opportunity API calls for now
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      {/* Page header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Opportunities</h1>
-        <p className="text-gray-600">Scholarships, jobs, internships, grants &amp; events for Sierra Leone youth</p>
+        <p className="text-gray-600">Opportunity listings are temporarily unavailable.</p>
       </div>
-
-      {/* Category Stats */}
-      {(() => {
-        const activeType = Array.isArray(params.type) ? params.type : params.type ? [params.type] : []
-        const isAllActive = activeType.length === 0
-        const stats = [
-          { label: 'Total', count: totalCount ?? 0, type: null, color: 'text-blue-700', bg: 'bg-white', border: 'border-gray-200', activeBg: 'bg-blue-100', activeBorder: 'border-blue-500' },
-          { label: 'Jobs', count: jobCount ?? 0, type: 'job', color: 'text-blue-700', bg: 'bg-blue-50', border: 'border-blue-200', activeBg: 'bg-blue-200', activeBorder: 'border-blue-500' },
-          { label: 'Internships', count: internshipCount ?? 0, type: 'internship', color: 'text-purple-700', bg: 'bg-purple-50', border: 'border-purple-200', activeBg: 'bg-purple-200', activeBorder: 'border-purple-500' },
-          { label: 'Scholarships', count: scholarshipCount ?? 0, type: 'scholarship', color: 'text-blue-800', bg: 'bg-blue-50', border: 'border-blue-200', activeBg: 'bg-blue-200', activeBorder: 'border-blue-600' },
-          { label: 'Events', count: eventCount ?? 0, type: 'event', color: 'text-amber-700', bg: 'bg-amber-50', border: 'border-amber-200', activeBg: 'bg-amber-200', activeBorder: 'border-amber-500' },
-          { label: 'Grants', count: grantCount ?? 0, type: 'grant', color: 'text-rose-700', bg: 'bg-rose-50', border: 'border-rose-200', activeBg: 'bg-rose-200', activeBorder: 'border-rose-500' },
-        ]
-        return (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
-            {stats.map((s) => {
-              const isActive = s.type === null ? isAllActive : activeType.includes(s.type)
-              const href = s.type === null ? '/opportunities' : `/opportunities?type=${s.type}`
-              return (
-                <Link
-                  key={s.label}
-                  href={href}
-                  className={`rounded-lg border-2 p-4 text-center transition-all ${
-                    isActive
-                      ? `${s.activeBg} ${s.activeBorder} shadow-md ring-1 ring-offset-1 ring-current/10`
-                      : `${s.bg} ${s.border} hover:shadow-md`
-                  }`}
-                >
-                  <div className={`text-2xl font-bold ${s.color}`}>{s.count}</div>
-                  <div className={`text-xs ${s.color} mt-1`}>{s.label}</div>
-                </Link>
-              )
-            })}
-          </div>
-        )
-      })()}
-
-      {/* Search + Filter + Sort bar */}
-      <div className="flex items-center gap-3 mb-6">
-        <OpportunitySearch defaultValue={params.search} />
-        <OpportunityFilters activeFilterCount={activeFilterCount} />
-        <LocalFilter />
-        <OpportunitySort currentSort={params.sort ?? 'newest'} />
-      </div>
-
-      {/* Opportunities grid */}
-      <Suspense
-        key={JSON.stringify(params)}
-        fallback={
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {Array.from({ length: 6 }).map((_, i) => <CardSkeleton key={i} />)}
-          </div>
-        }
-      >
-        <OpportunitiesGrid searchParams={params} />
-      </Suspense>
+      <EmptyState
+        icon="⏸️"
+        title="Temporarily Disabled"
+        description="Opportunity data is currently disabled. Please check back later."
+      />
     </div>
   )
 }
