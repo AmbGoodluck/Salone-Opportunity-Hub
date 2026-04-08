@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 
 // Always specify exactly which columns you need
 export async function getOpportunities(limit = 20, offset = 0) {
-	const supabase = createClient();
+	const supabase = await createClient();
   
 	// ✅ GOOD - Only fetch needed columns
 	const { data, error } = await supabase

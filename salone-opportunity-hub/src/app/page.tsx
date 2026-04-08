@@ -14,10 +14,10 @@ export default async function HomePage() {
   // Get quick stats
   const [{ count: scholarshipCount }, { count: jobCount }, { count: internshipCount }, { count: grantCount }] =
     await Promise.all([
-      supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'scholarship').eq('sl_eligible', true),
-      supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'job').eq('sl_eligible', true),
-      supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'internship').eq('sl_eligible', true),
-      supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'grant').eq('sl_eligible', true),
+      supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'scholarship').or('sl_eligible.eq.true,sl_eligible.is.null'),
+      supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'job').or('sl_eligible.eq.true,sl_eligible.is.null'),
+      supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'internship').or('sl_eligible.eq.true,sl_eligible.is.null'),
+      supabase.from('opportunities').select('*', { count: 'exact', head: true }).eq('type', 'grant').or('sl_eligible.eq.true,sl_eligible.is.null'),
     ])
 
   return (

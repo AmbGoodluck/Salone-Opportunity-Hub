@@ -1,7 +1,6 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { SlidersHorizontal } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { OpportunityCard } from '@/components/opportunities/opportunity-card'
 import { OpportunityFilters } from '@/components/opportunities/opportunity-filters'
@@ -48,7 +47,7 @@ async function OpportunitiesGrid({ searchParams }: { searchParams: SearchParams 
   let query = supabase
     .from('opportunities')
     .select('*', { count: 'exact' })
-    .eq('sl_eligible', true)
+    .or('sl_eligible.eq.true,sl_eligible.is.null')
 
   // Search
   if (searchParams.search) {
@@ -274,18 +273,44 @@ export default async function OpportunitiesPage({
 }: {
   searchParams: Promise<SearchParams>
 }) {
-  // Disable all opportunity API calls for now
+  const params = await searchParams
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Opportunities</h1>
-        <p className="text-gray-600">Opportunity listings are temporarily unavailable.</p>
+        <p className="text-gray-600">Scholarships, jobs, internships, and grants for Sierra Leone youth.</p>
       </div>
-      <EmptyState
-        icon="⏸️"
-        title="Temporarily Disabled"
-        description="Opportunity data is currently disabled. Please check back later."
-      />
+
+      <div className="flex flex-col lg:flex-row gap-6">
+        {/* Sidebar filters */}
+        <aside className="lg:w-64 shrink-0">
+          <OpportunityFilters />
+        </aside>
+
+        {/* Main content */}
+        <div className="flex-1 min-w-0">
+          <div className="flex flex-col sm:flex-row gap-3 mb-6">
+            <div className="flex-1">
+              <OpportunitySearch />
+            </div>
+            <OpportunitySort currentSort={params.sort ?? 'newest'} />
+            <LocalFilter />
+          </div>
+
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <CardSkeleton key={i} />
+                ))}
+              </div>
+            }
+          >
+            <OpportunitiesGrid searchParams={params} />
+          </Suspense>
+        </div>
+      </div>
     </div>
   )
 }

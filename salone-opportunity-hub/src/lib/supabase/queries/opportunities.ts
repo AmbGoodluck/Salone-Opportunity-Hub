@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 
 export async function getActiveOpportunities(limit = 20) {
-  const supabase = createClient();
+  const supabase = await createClient();
   
   // Filter in the query, not in the index
   const { data, error } = await supabase
@@ -14,13 +14,15 @@ export async function getActiveOpportunities(limit = 20) {
   return { data, error };
 }
 
+type OpportunityType = 'job' | 'internship' | 'scholarship' | 'event' | 'grant'
+
 export async function getAllOpportunities(filters?: {
-  type?: string;
+  type?: OpportunityType;
   category?: string;
   location?: string;
   includeExpired?: boolean;
 }) {
-  const supabase = createClient();
+  const supabase = await createClient();
   
   let query = supabase
     .from('opportunities')
