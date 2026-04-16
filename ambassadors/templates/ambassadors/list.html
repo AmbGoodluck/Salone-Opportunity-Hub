@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-5xl mx-auto mt-10">
+  <h2 class="text-3xl font-bold mb-6">SOH Ambassadors</h2>
+  <form method="get" class="mb-6 flex">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search by name or city"
+      class="flex-1 border rounded-l px-4 py-2 focus:outline-none" />
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-r">Search</button>
+  </form>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    {% for ambassador in ambassadors %}
+    <div class="bg-white rounded shadow p-4 flex flex-col items-center">
+      {% if ambassador.profile_picture %}
+        <img src="{{ ambassador.profile_picture.url }}" alt="{{ ambassador.name }}" class="w-24 h-24 rounded-full object-cover mb-2">
+      {% else %}
+        <div class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center mb-2 text-2xl">👤</div>
+      {% endif %}
+      <div class="font-bold text-lg">{{ ambassador.name }}</div>
+      <div class="text-gray-600">{{ ambassador.city }}</div>
+      <a href="{% url 'ambassadors:detail' ambassador.slug %}" class="mt-2 text-blue-600 hover:underline">View Profile</a>
+    </div>
+    {% empty %}
+    <div class="col-span-3 text-center text-gray-500">No ambassadors found.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

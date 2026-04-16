@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="max-w-xl mx-auto mt-10 p-6 bg-white rounded shadow">
+  <h2 class="text-2xl font-bold mb-4">Become an SOH Ambassador</h2>
+  <form method="post" enctype="multipart/form-data" class="space-y-4">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div>
+      <label class="block font-semibold">Full Name</label>
+      {{ form.name }}
+    </div>
+    <div>
+      <label class="block font-semibold">Profile Picture</label>
+      {{ form.profile_picture }}
+    </div>
+    <div>
+      <label class="block font-semibold">City</label>
+      {{ form.city }}
+    </div>
+    <div>
+      <label class="block font-semibold">Region (optional)</label>
+      {{ form.region }}
+    </div>
+    <div>
+      <label class="block font-semibold">Phone Number</label>
+      {{ form.phone }}
+    </div>
+    <div>
+      <label class="block font-semibold">Email</label>
+      {{ form.email }}
+    </div>
+    <div>
+      <label class="block font-semibold">Short Bio (optional)</label>
+      {{ form.bio }}
+    </div>
+    <button type="submit" class="w-full py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Submit Application</button>
+  </form>
+</div>
+{% endblock %}
