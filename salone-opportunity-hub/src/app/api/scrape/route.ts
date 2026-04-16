@@ -6,57 +6,48 @@ import type { NextRequest } from 'next/server'
 
 export const maxDuration = 60
 
+// Helper to chunk arrays to prevent "Failed to fetch" (URI Too Long) errors
+const chunkArray = <T,>(arr: T[], size: number): T[][] =>
+  Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
+    arr.slice(i * size, i * size + size)
+  )
+
 export async function POST(request: NextRequest) {
-  const authHeader = request.headers.get('authorization')
-  const secret = process.env.SCRAPER_SECRET
-
-  if (!secret || authHeader !== `Bearer ${secret}`) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  const supabase = createAdminClient()
-  const scraper = new OpportunityScraper()
-
-  const summary: { source: string; inserted: number; skipped: number; errors: string[] }[] = []
-  const allInserted: { id: string; title: string; type: string; category: string; description: string }[] = []
-
-  const sources = [
-    { name: 'opportunity_desk', fn: () => scraper.scrapeOpportunityDesk() },
-    { name: 'adzuna_api', fn: () => scraper.fetchAdzunaJobs() },
-    { name: 'rss_devex', fn: () => scraper.scrapeRSSFeed('https://www.devex.com/jobs.rss') },
-    { name: 'rss_idealist', fn: () => scraper.scrapeRSSFeed('https://idealist.org/feed.xml') },
-    { name: 'rss_reliefweb', fn: () => scraper.scrapeRSSFeed('https://reliefweb.int/jobs/rss.xml') },
-    { name: 'rss_reliefweb_training', fn: () => scraper.scrapeRSSFeed('https://reliefweb.int/training/rss.xml') },
-    { name: 'rss_trust_africa', fn: () => scraper.scrapeRSSFeed('https://trustafrica.org/feed/') },
-    { name: 'rss_undp', fn: () => scraper.scrapeRSSFeed('https://jobs.undp.org/cj_rss_feed.cfm') },
-    { name: 'rss_un_careers', fn: () => scraper.scrapeRSSFeed('https://careers.un.org/lbw/home.aspx?viewRSS=1') },
-    { name: 'rss_eurobrussels', fn: () => scraper.scrapeRSSFeed('https://www.eurobrussels.com/rss/rss_jobs.xml') },
-    { name: 'rss_usaid', fn: () => scraper.scrapeRSSFeed('https://www.usaid.gov/rss/careers.xml') },
-    { name: 'rss_globalgiving', fn: () => scraper.scrapeRSSFeed('https://www.globalgiving.org/dy/v2/content/rss/project-listing.xml') },
-  ]
-
-  for (const source of sources) {
-    let inserted = 0
-    let skipped = 0
-    const errors: string[] = []
-
-    try {
-      const opportunities = await source.fn()
-
-      for (const opp of opportunities) {
-        const { data: existing } = await supabase
+  return NextResponse.json({ message: 'Opportunity scraping is temporarily disabled.' }, { status: 200 });
+        const { data } = await supabase
           .from('opportunities')
-          .select('id')
-          .eq('application_link', opp.application_link)
-          .single()
+          .select('application_link')
+          .in('application_link', chunk)
+        if (data) existingDocsByLink.push(...data)
+      }
 
-        if (existing) { skipped++; continue }
+      const existingDocsByTitle: any[] = []
+      for (const chunk of chunkArray(titles, 25)) {
+        const { data } = await supabase
+          .from('opportunities')
+          .select('title, organization')
+          .in('title', chunk)
+        if (data) existingDocsByTitle.push(...data)
+      }
 
-        const { data, error } = await supabase.from('opportunities').insert(opp).select('id, title, type, category, description').single()
+      const existingLinks = new Set(existingDocsByLink?.map(d => d.application_link) || [])
+      const existingTitlesOrgs = new Set(existingDocsByTitle?.map(d => `${d.title}|${d.organization || ''}`) || [])
+
+      // 2. Filter out duplicates
+      const newOpps = opportunities.filter((opp: any) => {
+        const hasSameLink = existingLinks.has(opp.application_link)
+        const hasSameTitleOrg = existingTitlesOrgs.has(`${opp.title}|${opp.organization || ''}`)
+        return !hasSameLink && !hasSameTitleOrg
+      })
+      skipped += opportunities.length - newOpps.length
+
+      // 3. Bulk insert only the new opportunities
+      if (newOpps.length > 0) {
+        const { data, error } = await supabase.from('opportunities').insert(newOpps).select('id, title, type, category, description')
         if (error) errors.push(error.message)
-        else {
-          inserted++
-          if (data) allInserted.push(data)
+        else if (data) {
+          inserted += data.length
+          allInserted.push(...data)
         }
       }
     } catch (err) {
