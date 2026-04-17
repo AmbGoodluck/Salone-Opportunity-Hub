@@ -1,22 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
-
-// Cloudflare R2 config from environment variables
-const R2_ENDPOINT = process.env.R2_ENDPOINT!
-const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID!
-const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY!
-const R2_BUCKET = process.env.R2_BUCKET!
-
-const s3 = new S3Client({
-  region: 'auto',
-  endpoint: R2_ENDPOINT,
-  credentials: {
-    accessKeyId: R2_ACCESS_KEY_ID,
-    secretAccessKey: R2_SECRET_ACCESS_KEY,
-  },
-  forcePathStyle: true,
-})
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
@@ -38,23 +21,22 @@ export async function POST(request: NextRequest) {
   const ext = file.name.split('.').pop() || 'jpg'
   const filePath = `${user.id}/avatar.${ext}`
 
-  // Upload to Cloudflare R2
-  try {
-    await s3.send(new PutObjectCommand({
-      Bucket: R2_BUCKET,
-      Key: filePath,
-      Body: Buffer.from(await file.arrayBuffer()),
-      ContentType: file.type,
-      ACL: 'public-read',
-    }))
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message || 'Upload failed' }, { status: 500 })
+  // Upload to Supabase Storage
+  const { error: uploadError } = await supabase.storage
+    .from('avatars')
+    .upload(filePath, file, { upsert: true, contentType: file.type })
+
+  if (uploadError) {
+    if (uploadError.message?.includes('Bucket not found')) {
+      return NextResponse.json({
+        error: 'Storage bucket "avatars" not found. Please create it in Supabase Dashboard > Storage, or run the migration SQL.',
+      }, { status: 500 })
+    }
+    return NextResponse.json({ error: uploadError.message }, { status: 500 })
   }
 
-  // Construct public URL
-  const publicUrl = `${R2_ENDPOINT.replace(/^https?:\/\//, 'https://')}/${R2_BUCKET}/${filePath}`
+  const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(filePath)
 
-  // Update user profile in Supabase
   const { error: updateError } = await supabase
     .from('profiles')
     .update({ avatar_url: publicUrl })
