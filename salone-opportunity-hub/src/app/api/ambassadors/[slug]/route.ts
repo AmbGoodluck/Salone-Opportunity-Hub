@@ -2,9 +2,17 @@ import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
 // GET /api/ambassadors/[slug] - get ambassador profile by slug
-export async function GET(request: Request, { params }: { params: { slug: string } }) {
+import type { NextRequest } from 'next/server'
+
+export async function GET(request: NextRequest, context: { params: any }) {
   const supabase = createClient()
-  const { slug } = params
+  // Workaround for Next.js/adapter bug: params may be a Promise
+  let slug = context.params?.slug
+  if (typeof slug === 'undefined' && typeof context.params?.then === 'function') {
+    // If params is a Promise, await it
+    const awaited = await context.params
+    slug = awaited?.slug
+  }
   const { data, error } = await supabase
     .from('ambassadors')
     .select('*')
