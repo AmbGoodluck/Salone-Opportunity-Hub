@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
   // Required for @react-pdf/renderer (server component external packages)
   serverExternalPackages: ['@react-pdf/renderer'],
   // Cloudflare Pages compatibility
-  // output: 'export', // Uncomment for static export to Cloudflare Pages
+  output: 'export', // Static export for Cloudflare Pages
 }
 
 export default nextConfig

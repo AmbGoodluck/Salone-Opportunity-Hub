@@ -21,6 +21,7 @@ import type { User as SupabaseUser } from '@supabase/supabase-js'
 const NAV_LINKS = [
   { href: '/opportunities', label: 'Opportunities' },
   { href: '/organizations', label: 'Organizations' },
+  { href: '/ambassadors', label: 'Ambassadors' },
   { href: '/saved', label: 'Saved', authRequired: true },
   { href: '/cv-builder', label: 'CV Builder', authRequired: true },
 ]
