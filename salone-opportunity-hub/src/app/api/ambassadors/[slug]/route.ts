@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export async function GET(request: NextRequest, context: { params: any }) {
-  const supabase = createClient()
+  const supabase = await createClient()
   // Workaround for Next.js/adapter bug: params may be a Promise
   let slug = context.params?.slug
   if (typeof slug === 'undefined' && typeof context.params?.then === 'function') {

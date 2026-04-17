@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 
 // POST /api/ambassadors/apply - submit application
 export async function POST(request: Request) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const body = await request.json()
   const { name, profile_picture, city, region, phone, email, bio, user_id } = body
   // Basic validation

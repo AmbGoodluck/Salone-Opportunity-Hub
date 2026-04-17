@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 
 // GET /api/ambassadors - public directory with optional search
 export async function GET(request: Request) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { searchParams } = new URL(request.url)
   const q = searchParams.get('q') || ''
   let query = supabase
