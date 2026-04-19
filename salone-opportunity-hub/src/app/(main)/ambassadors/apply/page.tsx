@@ -5,7 +5,7 @@ import { useUser } from './useUser'
 
 export default function AmbassadorApplyPage() {
   const user = useUser()
-  const [form, setForm] = useState({ name: '', profile_picture: '', city: '', region: '', phone: '', email: '', bio: '' })
+  const [form, setForm] = useState({ name: '', city: '', region: '', phone: '', email: '', bio: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
@@ -43,7 +43,7 @@ export default function AmbassadorApplyPage() {
       <h2 className="text-2xl font-bold mb-4">Become an SOH Ambassador</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input required className="w-full border rounded px-3 py-2" placeholder="Full Name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
-        <input className="w-full border rounded px-3 py-2" placeholder="Profile Picture URL" value={form.profile_picture} onChange={e => setForm(f => ({ ...f, profile_picture: e.target.value }))} />
+        {/* Profile picture field removed: will use user profile avatar */}
         <input required className="w-full border rounded px-3 py-2" placeholder="City" value={form.city} onChange={e => setForm(f => ({ ...f, city: e.target.value }))} />
         <input className="w-full border rounded px-3 py-2" placeholder="Region (optional)" value={form.region} onChange={e => setForm(f => ({ ...f, region: e.target.value }))} />
         <input required className="w-full border rounded px-3 py-2" placeholder="Phone Number" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} />

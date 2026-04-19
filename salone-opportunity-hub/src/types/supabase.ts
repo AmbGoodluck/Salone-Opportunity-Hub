@@ -14,7 +14,10 @@ export type Database = {
           id: string
           user_id: string
           name: string
-          profile_picture: string | null
+          /**
+           * @deprecated Use user profile avatar_url instead
+           */
+          profile_picture?: string | null
           city: string
           region: string | null
           phone: string

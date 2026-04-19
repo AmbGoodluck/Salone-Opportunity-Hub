@@ -18,10 +18,10 @@ def unique_slugify(instance, value, slug_field_name='slug'):
         unique_slug = f"{slug}-{secrets.token_hex(2)}"
     return unique_slug
 
+
 class Ambassador(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True, max_length=120)
-    profile_picture = models.ImageField(upload_to='ambassadors/', blank=True, null=True)
     city = models.CharField(max_length=100)
     region = models.CharField(max_length=100, blank=True)
     phone = models.CharField(max_length=20)

@@ -2,11 +2,8 @@
 {% block content %}
 <div class="max-w-xl mx-auto mt-10 bg-white rounded shadow p-8">
   <div class="flex flex-col items-center">
-    {% if ambassador.profile_picture %}
-      <img src="{{ ambassador.profile_picture.url }}" alt="{{ ambassador.name }}" class="w-32 h-32 rounded-full object-cover mb-4">
-    {% else %}
-      <div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center mb-4 text-4xl">👤</div>
-    {% endif %}
+    {# Profile picture removed: will use user profile avatar from Supabase, to be handled in view #}
+    <div id="ambassador-avatar"></div>
     <h2 class="text-2xl font-bold mb-2">{{ ambassador.name }}</h2>
     <div class="text-gray-600 mb-2">{{ ambassador.city }}{% if ambassador.region %}, {{ ambassador.region }}{% endif %}</div>
     {% if ambassador.bio %}

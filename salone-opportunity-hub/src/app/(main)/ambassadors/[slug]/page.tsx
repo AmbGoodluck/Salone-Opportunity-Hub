@@ -19,11 +19,21 @@ export default function AmbassadorDetailPage() {
   if (loading) return <div className="text-center mt-10">Loading...</div>
   if (!ambassador) return <div className="text-center mt-10 text-red-600">Ambassador not found.</div>
 
+  // Fetch user profile avatar_url from Supabase
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (ambassador?.user_id) {
+      fetch(`/api/profile/avatar-url?user_id=${ambassador.user_id}`)
+        .then(res => res.json())
+        .then(data => setAvatarUrl(data.avatar_url || null));
+    }
+  }, [ambassador?.user_id]);
+
   return (
     <div className="max-w-xl mx-auto mt-10 bg-white rounded shadow p-8">
       <div className="flex flex-col items-center">
-        {ambassador.profile_picture ? (
-          <img src={ambassador.profile_picture} alt={ambassador.name} className="w-32 h-32 rounded-full object-cover mb-4" />
+        {avatarUrl ? (
+          <img src={avatarUrl} alt={ambassador.name} className="w-32 h-32 rounded-full object-cover mb-4" />
         ) : (
           <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center mb-4 text-4xl">👤</div>
         )}

@@ -10,11 +10,8 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
     {% for ambassador in ambassadors %}
     <div class="bg-white rounded shadow p-4 flex flex-col items-center">
-      {% if ambassador.profile_picture %}
-        <img src="{{ ambassador.profile_picture.url }}" alt="{{ ambassador.name }}" class="w-24 h-24 rounded-full object-cover mb-2">
-      {% else %}
-        <div class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center mb-2 text-2xl">👤</div>
-      {% endif %}
+      {# Profile picture removed: will use user profile avatar from Supabase, to be handled in view #}
+      <div id="ambassador-avatar-{{ ambassador.id }}"></div>
       <div class="font-bold text-lg">{{ ambassador.name }}</div>
       <div class="text-gray-600">{{ ambassador.city }}</div>
       <a href="{% url 'ambassadors:detail' ambassador.slug %}" class="mt-2 text-blue-600 hover:underline">View Profile</a>

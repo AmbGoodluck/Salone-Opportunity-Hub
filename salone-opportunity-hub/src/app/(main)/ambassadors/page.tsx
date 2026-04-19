@@ -38,17 +38,32 @@ export default function AmbassadorDirectoryPage() {
       </form>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {loading ? <div>Loading...</div> : ambassadors.length === 0 ? <div className="col-span-3 text-center text-gray-500">No ambassadors found.</div> : ambassadors.map(ambassador => (
-          <div key={ambassador.id} className="bg-white rounded shadow p-4 flex flex-col items-center">
-            {ambassador.profile_picture ? (
-              <img src={ambassador.profile_picture} alt={ambassador.name} className="w-24 h-24 rounded-full object-cover mb-2" />
-            ) : (
-              <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center mb-2 text-2xl">👤</div>
-            )}
-            <div className="font-bold text-lg">{ambassador.name}</div>
-            <div className="text-gray-600">{ambassador.city}</div>
-            <Link href={`/ambassadors/${ambassador.slug}`} className="mt-2 text-blue-600 hover:underline">View Profile</Link>
-          </div>
+          <AmbassadorCard key={ambassador.id} ambassador={ambassador} />
         ))}
+
+// Helper component to fetch and display avatar
+function AmbassadorCard({ ambassador }: { ambassador: any }) {
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (ambassador?.user_id) {
+      fetch(`/api/profile/avatar-url?user_id=${ambassador.user_id}`)
+        .then(res => res.json())
+        .then(data => setAvatarUrl(data.avatar_url || null));
+    }
+  }, [ambassador?.user_id]);
+  return (
+    <div className="bg-white rounded shadow p-4 flex flex-col items-center">
+      {avatarUrl ? (
+        <img src={avatarUrl} alt={ambassador.name} className="w-24 h-24 rounded-full object-cover mb-2" />
+      ) : (
+        <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center mb-2 text-2xl">👤</div>
+      )}
+      <div className="font-bold text-lg">{ambassador.name}</div>
+      <div className="text-gray-600">{ambassador.city}</div>
+      <Link href={`/ambassadors/${ambassador.slug}`} className="mt-2 text-blue-600 hover:underline">View Profile</Link>
+    </div>
+  );
+}
       </div>
     </div>
   )

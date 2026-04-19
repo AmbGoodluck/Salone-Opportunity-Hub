@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
 export async function POST(request: Request) {
   const supabase = await createClient()
   const body = await request.json()
-  const { name, profile_picture, city, region, phone, email, bio, user_id } = body
+  const { name, city, region, phone, email, bio, user_id } = body
   // Basic validation
   if (!name || !city || !phone || !email || !user_id) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -23,7 +23,6 @@ export async function POST(request: Request) {
   const { data, error } = await supabase.from('ambassadors').insert([
     {
       name,
-      profile_picture,
       city,
       region,
       phone,

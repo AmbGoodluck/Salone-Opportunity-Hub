@@ -2,10 +2,11 @@ from django import forms
 from .models import Ambassador
 import re
 
+
 class AmbassadorApplicationForm(forms.ModelForm):
     class Meta:
         model = Ambassador
-        fields = ['name', 'profile_picture', 'city', 'region', 'phone', 'email', 'bio']
+        fields = ['name', 'city', 'region', 'phone', 'email', 'bio']
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 3}),
         }
