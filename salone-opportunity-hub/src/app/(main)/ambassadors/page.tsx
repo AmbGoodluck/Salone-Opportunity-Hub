@@ -37,7 +37,6 @@ function AmbassadorCard({ ambassador }: { ambassador: any }) {
         .then(data => setAvatarUrl(data.avatar_url || null));
     }
   }, [ambassador?.user_id]);
-
   return (
     <div className="bg-white rounded shadow p-4 flex flex-col items-center">
       {avatarUrl ? (
@@ -50,14 +49,4 @@ function AmbassadorCard({ ambassador }: { ambassador: any }) {
       <Link href={`/ambassadors/${ambassador.slug}`} className="mt-2 text-blue-600 hover:underline">View Profile</Link>
     </div>
   );
-}
-      <div className="font-bold text-lg">{ambassador.name}</div>
-      <div className="text-gray-600">{ambassador.city}</div>
-      <Link href={`/ambassadors/${ambassador.slug}`} className="mt-2 text-blue-600 hover:underline">View Profile</Link>
-    </div>
-  );
-}
-      </div>
-    </div>
-  )
 }
