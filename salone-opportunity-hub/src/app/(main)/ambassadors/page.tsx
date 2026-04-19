@@ -51,14 +51,6 @@ function AmbassadorCard({ ambassador }: { ambassador: any }) {
     </div>
   );
 }
-  }, [ambassador?.user_id]);
-  return (
-    <div className="bg-white rounded shadow p-4 flex flex-col items-center">
-      {avatarUrl ? (
-        <img src={avatarUrl} alt={ambassador.name} className="w-24 h-24 rounded-full object-cover mb-2" />
-      ) : (
-        <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center mb-2 text-2xl">👤</div>
-      )}
       <div className="font-bold text-lg">{ambassador.name}</div>
       <div className="text-gray-600">{ambassador.city}</div>
       <Link href={`/ambassadors/${ambassador.slug}`} className="mt-2 text-blue-600 hover:underline">View Profile</Link>
