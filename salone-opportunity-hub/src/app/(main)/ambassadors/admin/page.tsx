@@ -28,7 +28,7 @@ export default function AmbassadorAdminPage() {
   async function handleAction(id: string, action: "approve" | "reject") {
     setError("");
     try {
-      const res = await fetch(`/api/ambassadors/admin/${action}", {
+      const res = await fetch(`/api/ambassadors/admin/${action}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id })
@@ -55,7 +55,7 @@ export default function AmbassadorAdminPage() {
             <div key={amb.id} className="bg-white rounded shadow p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <div className="font-bold text-lg">{amb.name}</div>
-                <div className="text-gray-600">{amb.city} {amb.region && `(${amb.region})`}</div>
+                <div className="text-gray-600">{amb.city}{amb.region ? ` (${amb.region})` : ""}</div>
                 <div className="text-gray-500 text-sm">{amb.email} | {amb.phone}</div>
                 <div className="mt-2 text-gray-700">{amb.bio}</div>
               </div>
