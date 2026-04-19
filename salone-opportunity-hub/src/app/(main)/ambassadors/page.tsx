@@ -7,24 +7,6 @@ export default function AmbassadorDirectoryPage() {
   const [query, setQuery] = useState('')
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    fetch(`/api/ambassadors?q=${encodeURIComponent(query)}`)
-      .then(async res => {
-        if (!res.ok) throw new Error('Network response was not ok');
-        const text = await res.text();
-        if (!text) return { ambassadors: [] };
-        return JSON.parse(text);
-      })
-      .then(data => {
-        setAmbassadors(data.ambassadors || []);
-        setLoading(false);
-      })
-      .catch(() => {
-        setAmbassadors([]);
-        setLoading(false);
-      });
-  }, [query]);
-
   return (
     <div className="max-w-5xl mx-auto mt-10">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
@@ -40,6 +22,10 @@ export default function AmbassadorDirectoryPage() {
         {loading ? <div>Loading...</div> : ambassadors.length === 0 ? <div className="col-span-3 text-center text-gray-500">No ambassadors found.</div> : ambassadors.map(ambassador => (
           <AmbassadorCard key={ambassador.id} ambassador={ambassador} />
         ))}
+      </div>
+    </div>
+  )
+}
 
 // Helper component to fetch and display avatar
 function AmbassadorCard({ ambassador }: { ambassador: any }) {
@@ -50,6 +36,20 @@ function AmbassadorCard({ ambassador }: { ambassador: any }) {
         .then(res => res.json())
         .then(data => setAvatarUrl(data.avatar_url || null));
     }
+  }, [ambassador?.user_id]);
+  return (
+    <div className="bg-white rounded shadow p-4 flex flex-col items-center">
+      {avatarUrl ? (
+        <img src={avatarUrl} alt={ambassador.name} className="w-24 h-24 rounded-full object-cover mb-2" />
+      ) : (
+        <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center mb-2 text-2xl">👤</div>
+      )}
+      <div className="font-bold text-lg">{ambassador.name}</div>
+      <div className="text-gray-600">{ambassador.city}</div>
+      <Link href={`/ambassadors/${ambassador.slug}`} className="mt-2 text-blue-600 hover:underline">View Profile</Link>
+    </div>
+  );
+}
   }, [ambassador?.user_id]);
   return (
     <div className="bg-white rounded shadow p-4 flex flex-col items-center">
