@@ -37,6 +37,7 @@ function AmbassadorCard({ ambassador }: { ambassador: any }) {
         .then(data => setAvatarUrl(data.avatar_url || null));
     }
   }, [ambassador?.user_id]);
+
   return (
     <div className="bg-white rounded shadow p-4 flex flex-col items-center">
       {avatarUrl ? (
